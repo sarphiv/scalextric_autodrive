@@ -36,7 +36,7 @@ INIT
 	MOVLW	b'00000000'		;Change analog ports to digital
 	MOVWF	ANSEL
 
-	MOVLW	b'11011111'		;Set up pins
+	MOVLW	b'11011111'		;Set up input/output pins
 	MOVWF	TRISC
 
 	BCF 	STATUS, RP0		;Change to bank 0
