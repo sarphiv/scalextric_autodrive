@@ -1,11 +1,11 @@
 MPLINK 4.49, Linker
-Linker Map File - Created Mon Oct 30 17:05:13 2017
+Linker Map File - Created Fri Nov 03 12:41:16 2017
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
-                   .org_0       code   0x000000    program   0x000018
-                   .cinit    romdata   0x00000c    program   0x000004
+                   .org_0       code   0x000000    program   0x000032
+                   .cinit    romdata   0x000019    program   0x000004
       .config_2007_MAIN.O       code   0x002007    program   0x000002
 
 
@@ -13,17 +13,19 @@ Linker Map File - Created Mon Oct 30 17:05:13 2017
                               Program Memory Usage 
                                Start         End      
                            ---------   ---------      
-                            0x000000    0x00000d      
+                            0x000000    0x00001a      
                             0x002007    0x002007      
-            15 out of 2310 program addresses used, program memory utilization is 0%
+            28 out of 2310 program addresses used, program memory utilization is 1%
 
 
 
                               Symbols - Sorted by Name
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
+                   ENABLE   0x000016    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
                      INIT   0x000001    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
-                     loop   0x00000b    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
+                     LOOP   0x000011    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
+                  LOOPEND   0x000018    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
 
 
 
@@ -31,6 +33,8 @@ Linker Map File - Created Mon Oct 30 17:05:13 2017
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
                      INIT   0x000001    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
-                     loop   0x00000b    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
+                     LOOP   0x000011    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
+                   ENABLE   0x000016    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
+                  LOOPEND   0x000018    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
 
 

@@ -1,4 +1,4 @@
-MPASM  5.51                          MAIN.ASM   10-30-2017  17:05:12         PAGE  1
+MPASM  5.51                          MAIN.ASM   11-3-2017  12:41:16         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -51,31 +51,55 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00030 
 0003   300C           00031         MOVLW   b'00001100'             ;Enable PWM on PORTC5
 0004   0095           00032         MOVWF   CCP1CON
-                      00033 
-0005   1683           00034         BSF     STATUS, RP0             ;Change to bank 1
-                      00035 
-0006   3000           00036         MOVLW   b'00000000'             ;Change analog ports to digital
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0007   0091           00037         MOVWF   ANSEL
-MPASM  5.51                          MAIN.ASM   10-30-2017  17:05:12         PAGE  2
+                      00033         
+0005   30BE           00034         MOVLW   d'190'                  ;PWM timer - Time on in a period
+0006   0093           00035         MOVWF   CCPR1L
+                      00036 
+0007   3007           00037         MOVLW   b'00000111'             ;Enable TIMER2 and set prescaler to 16
+0008   0092           00038         MOVWF   T2CON
+MPASM  5.51                          MAIN.ASM   11-3-2017  12:41:16         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00038 
-0008   30DF           00039         MOVLW   b'11011111'             ;Set up pins
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0009   0087           00040         MOVWF   TRISC
+                      00039 
+0009   1683           00040         BSF     STATUS, RP0             ;Change to bank 1
                       00041 
-000A   1283           00042         BCF     STATUS, RP0             ;Change to bank 0
-                      00043         
-000B                  00044 loop
-                      00045         
-000B   2???           00046         goto    loop                            
-                      00047 ; ******* PROGRAM SLUT *******************************************************************
-30C4                  00048         end
-MPASM  5.51                          MAIN.ASM   10-30-2017  17:05:12         PAGE  3
+000A   30FF           00042         MOVLW   d'255'                  ;PWM timer - Period time
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000B   0092           00043         MOVWF   PR2
+                      00044 
+000C   3000           00045         MOVLW   b'00000000'             ;Change analog ports to digital
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000D   0091           00046         MOVWF   ANSEL
+                      00047 
+000E   30CF           00048         MOVLW   b'11001111'             ;Set up input/output pins. C5 (motor), C4 (led) output. C0 (hall
+                            ), C1 (turn switch) input
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+000F   0087           00049         MOVWF   TRISC                   
+                      00050 
+0010   1283           00051         BCF     STATUS, RP0             ;Change to bank 0
+                      00052         
+0011                  00053 LOOP
+0011   1807           00054         BTFSC   PORTC, 0
+0012   2???           00055         GOTO    ENABLE
+                      00056 
+0013   303C           00057         MOVLW   d'60'
+0014   0093           00058         MOVWF   CCPR1L
+                      00059 
+0015   2???           00060         GOTO    LOOPEND
+                      00061 
+0016                  00062 ENABLE
+0016   30BE           00063         MOVLW   d'190'
+0017   0093           00064         MOVWF   CCPR1L
+                      00065 
+0018                  00066 LOOPEND
+                      00067 
+0018   2???           00068         goto    LOOP
+                      00069 ; ******* PROGRAM SLUT *******************************************************************
+30C4                  00070         end
+MPASM  5.51                          MAIN.ASM   11-3-2017  12:41:16         PAGE  3
 
 
 SYMBOL TABLE
@@ -134,7 +158,7 @@ DC                                00000001
 DC1B0                             00000004
 DC1B1                             00000005
 ECCPAS                            00000017
-MPASM  5.51                          MAIN.ASM   10-30-2017  17:05:12         PAGE  4
+MPASM  5.51                          MAIN.ASM   11-3-2017  12:41:16         PAGE  4
 
 
 SYMBOL TABLE
@@ -153,6 +177,7 @@ EEDAT                             0000009A
 EEDATA                            0000009A
 EEIE                              00000007
 EEIF                              00000007
+ENABLE                            00000016
 F                                 00000001
 FSR                               00000004
 GIE                               00000007
@@ -184,21 +209,23 @@ IRCF0                             00000004
 IRCF1                             00000005
 IRCF2                             00000006
 IRP                               00000007
+LOOP                              00000011
+LOOPEND                           00000018
 LTS                               00000001
 NOT_BOD                           00000000
 NOT_BOR                           00000000
 NOT_DONE                          00000001
 NOT_PD                            00000003
 NOT_POR                           00000001
-NOT_RAPU                          00000007
-NOT_T1SYNC                        00000002
-NOT_TO                            00000004
-MPASM  5.51                          MAIN.ASM   10-30-2017  17:05:12         PAGE  5
+MPASM  5.51                          MAIN.ASM   11-3-2017  12:41:16         PAGE  5
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+NOT_RAPU                          00000007
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
 OPTION_REG                        00000081
 OSCCON                            0000008F
 OSCTUNE                           00000090
@@ -249,15 +276,15 @@ RC4                               00000004
 RC5                               00000005
 RD                                00000000
 RP0                               00000005
-RP1                               00000006
-SBODEN                            00000004
-SBOREN                            00000004
-MPASM  5.51                          MAIN.ASM   10-30-2017  17:05:12         PAGE  6
+MPASM  5.51                          MAIN.ASM   11-3-2017  12:41:16         PAGE  6
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RP1                               00000006
+SBODEN                            00000004
+SBOREN                            00000004
 SCS                               00000000
 STATUS                            00000003
 SWDTEN                            00000000
@@ -308,15 +335,15 @@ TRISC                             00000087
 TRISC0                            00000000
 TRISC1                            00000001
 TRISC2                            00000002
-TRISC3                            00000003
-TRISC4                            00000004
-TRISC5                            00000005
-MPASM  5.51                          MAIN.ASM   10-30-2017  17:05:12         PAGE  7
+MPASM  5.51                          MAIN.ASM   11-3-2017  12:41:16         PAGE  7
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
 TUN0                              00000000
 TUN1                              00000001
 TUN2                              00000002
@@ -367,15 +394,15 @@ _CPD_ON                           00003F7F
 _CP_OFF                           00003FFF
 _CP_ON                            00003FBF
 _DEVID1                           00002006
-_EC_OSC                           00003FFB
-_EXTRC                            00003FFF
-_EXTRCIO                          00003FFE
-MPASM  5.51                          MAIN.ASM   10-30-2017  17:05:12         PAGE  8
+MPASM  5.51                          MAIN.ASM   11-3-2017  12:41:16         PAGE  8
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+_EC_OSC                           00003FFB
+_EXTRC                            00003FFF
+_EXTRCIO                          00003FFE
 _EXTRC_OSC_CLKOUT                 00003FFF
 _EXTRC_OSC_NOCLKOUT               00003FFE
 _FCMEN_OFF                        000037FF
@@ -411,10 +438,9 @@ _WDT_ON                           00003FFF
 _XT_OSC                           00003FF9
 __16F684                          00000001
 __DEBUG                           1
-loop                              0000000B
 
 Errors   :     0
 Warnings :     0 reported,     0 suppressed
-Messages :     2 reported,     0 suppressed
+Messages :     3 reported,     0 suppressed
 
 

@@ -23,26 +23,70 @@
 ; ******* OPSÆTNING AF PROGRAM POINTERE ***************************************************
 	ORG 	0x0000          ; processor reset vector
 	goto	INIT
+
+	ORG		0x0004
+	goto	ISR
 ; ******* INITIALISERING AF CONTROLER *****************************************************
 INIT
+	;Pin setup
 	MOVLW	b'00000111'		;Disable comparators
 	MOVWF	CMCON0
 
+	;Interupt setup
+	BSF		INTCON, 3		;Enable interupt on change on PORTA2
+	BSF		INTCON, 7
+	
+	;PWM setup
 	MOVLW	b'00001100'		;Enable PWM on PORTC5
 	MOVWF	CCP1CON
+	
+	MOVLW	d'190'			;PWM timer - Time on in a period
+	MOVWF	CCPR1L
+
+	MOVLW	b'00000111'		;Enable TIMER2 and set prescaler to 16
+	MOVWF	T2CON
 
 	BSF 	STATUS, RP0		;Change to bank 1
 
+	MOVLW	d'255'			;PWM timer - Period time
+	MOVWF	PR2
+	
+	;Pin setup
 	MOVLW	b'00000000'		;Change analog ports to digital
 	MOVWF	ANSEL
 
-	MOVLW	b'11011111'		;Set up input/output pins
-	MOVWF	TRISC
+	MOVLW	b'11001111'		;Set up input/output pins. C5 (motor), C4 (led) output. C0 (hall), C1 (turn switch) input
+	MOVWF	TRISC			
 
 	BCF 	STATUS, RP0		;Change to bank 0
 	
-loop
+LOOP
+	BTFSC	PORTC, 0
+	GOTO	ENABLE
+
+	MOVLW	d'60'
+	MOVWF	CCPR1L
+
+	GOTO 	LOOPEND
+
+ENABLE
+	MOVLW	d'190'
+	MOVWF	CCPR1L
+
+LOOPEND
+
+  	goto 	LOOP
+
+ISR
+	BTFSC	INTCON, 1		;Check if triggered by hall effect sensor
+	GOTO	HALLTRIG
+
+	RETFIE
 	
-  	goto 	loop				
+HALLTRIG
+	
+	BCF		INTCON, 1		;Clear hall effect sensor interrupt flag
+
+	RETFIE
 ; ******* PROGRAM SLUT *******************************************************************
  	end
