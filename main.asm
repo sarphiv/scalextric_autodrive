@@ -26,7 +26,7 @@
 
 	ORG		0x0004
 	goto	ISR
-; ******* INITIALISERING AF CONTROLER *****************************************************
+; ******* SETUP *****************************************************
 INIT
 	;Pin setup
 	MOVLW	b'00000111'		;Disable comparators
@@ -34,7 +34,7 @@ INIT
 
 	;Interupt setup
 	BSF		INTCON, 3		;Enable interupt on change on PORTA2
-	BSF		INTCON, 7
+	BSF		INTCON, 7		;Enable global interrupt switch
 	
 	;PWM setup
 	MOVLW	b'00001100'		;Enable PWM on PORTC5
@@ -59,8 +59,10 @@ INIT
 	MOVWF	TRISC			
 
 	BCF 	STATUS, RP0		;Change to bank 0
-	
+
+; ******* LOOP *****************************************************	
 LOOP
+	;Test program
 	BTFSC	PORTC, 0
 	GOTO	ENABLE
 
@@ -77,6 +79,7 @@ LOOPEND
 
   	goto 	LOOP
 
+; ******* SUBROUTINES *****************************************************
 ISR
 	BTFSC	INTCON, 1		;Check if triggered by hall effect sensor
 	GOTO	HALLTRIG
@@ -84,9 +87,15 @@ ISR
 	RETFIE
 	
 HALLTRIG
+	;Toggle interrupt to trigger on rise or fall. This allows us to capture half rotations
+	BSF 	STATUS, RP0		;Change to bank 1
+	MOVLW	b'01000000'		;Toggle interrupt edge select bit
 	
+	;Insert interrupt code here. No more time to write, sorry
+
+
 	BCF		INTCON, 1		;Clear hall effect sensor interrupt flag
 
 	RETFIE
-; ******* PROGRAM SLUT *******************************************************************
+; ******* END *******************************************************************
  	end
