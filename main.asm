@@ -1,6 +1,6 @@
-; ****** forbindelse af ICSP *********************  forbindelse af kredsløb ***************
+; ****** forbindelse af ICSP *********************  forbindelse af kredslÃ¸b ***************
 ;	Programmet forventes uploadet med en PICkit2 
-;	eller en PICkit3 pilen på PICkit angiver pin1 
+;	eller en PICkit3 pilen pÃ¥ PICkit angiver pin1 
 ;	Navn		PICkit	PIC16F684					Funktion		PIC16F684
 ;	VPP/MCLR	1		4										
 ;	VDD/TARGET	2		1							LED				PORTC,5	
@@ -17,10 +17,10 @@
                 ; no watchdog, power-up timer, int clock with I/O,
                 ; no failsafe clock monitor, two-speed start-up disabled 
  __CONFIG _FCMEN_OFF & _IESO_OFF & _BOD_OFF & _CPD_OFF &    _CP_OFF & _MCLRE_OFF & _PWRTE_ON & _WDT_OFF & _INTRC_OSC_NOCLKOUT
-; ******* OPSÆTNING AF VARIABLE ***********************************************************
+; ******* OPSÃ†TNING AF VARIABLE ***********************************************************
 ; Skriv variable og konstanter ind her
 
-; ******* OPSÆTNING AF PROGRAM POINTERE ***************************************************
+; ******* OPSÃ†TNING AF PROGRAM POINTERE ***************************************************
 	ORG 	0x0000          ; processor reset vector
 	goto	INIT
 
@@ -54,8 +54,9 @@ INIT
 	;Pin setup
 	MOVLW	b'00000000'		;Change analog ports to digital
 	MOVWF	ANSEL
-
-	MOVLW	b'11001111'		;Set up input/output pins. C5 (motor), C4 (led) output. C0 (hall), C1 (turn switch) input
+	
+					;A2/INT (hall) input
+	MOVLW	b'11001111'		;Set up input/output pins. C5 (motor), C4 (led) output. C0 (turn switch) input
 	MOVWF	TRISC			
 
 	BCF 	STATUS, RP0		;Change to bank 0
