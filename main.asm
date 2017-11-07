@@ -33,7 +33,7 @@ INIT
 	MOVWF	CMCON0
 
 	;Interupt setup
-	BSF		INTCON, 3		;Enable interupt on change on PORTA2
+	BSF		INTCON, 4		;Enable interupt on change on PORTA2
 	BSF		INTCON, 7		;Enable global interrupt switch
 	
 	;PWM setup
@@ -91,11 +91,14 @@ HALLTRIG
 	;Toggle interrupt to trigger on rise or fall. This allows us to capture half rotations
 	BSF 	STATUS, RP0		;Change to bank 1
 	MOVLW	b'01000000'		;Toggle interrupt edge select bit
+	XORWF	OPTION_REG, F		;
+	BCF	STATUS, RP0		;Change to bank 0
 	
-	;Insert interrupt code here. No more time to write, sorry
-
-
-	BCF		INTCON, 1		;Clear hall effect sensor interrupt flag
+	MOVLW	b'00010000'		;Change LED output
+	XORWF	PORTC, F
+	
+	
+	BCF		INTCON, 1	;Clear hall effect sensor interrupt flag
 
 	RETFIE
 ; ******* END *******************************************************************
