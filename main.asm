@@ -83,7 +83,7 @@ LOOPEND
 ; ******* SUBROUTINES *****************************************************
 ISR
 	BTFSC	INTCON, 1		;Check if triggered by hall effect sensor
-	GOTO	HALLTRIG
+	CALL	HALLTRIG
 
 	RETFIE
 	
@@ -100,6 +100,6 @@ HALLTRIG
 	
 	BCF		INTCON, 1	;Clear hall effect sensor interrupt flag
 
-	RETFIE
+	RETURN
 ; ******* END *******************************************************************
  	end
