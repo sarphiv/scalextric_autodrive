@@ -1,11 +1,12 @@
 MPLINK 4.49, Linker
-Linker Map File - Created Fri Nov 03 12:41:16 2017
+Linker Map File - Created Tue Nov 07 12:33:45 2017
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
                 ---------  ---------  ---------  ---------  ---------
-                   .org_0       code   0x000000    program   0x000032
-                   .cinit    romdata   0x000019    program   0x000004
+                   .org_0       code   0x000000    program   0x000002
+                   .cinit    romdata   0x000001    program   0x000004
+                   .org_1       code   0x000004    program   0x00003e
       .config_2007_MAIN.O       code   0x002007    program   0x000002
 
 
@@ -13,28 +14,31 @@ Linker Map File - Created Fri Nov 03 12:41:16 2017
                               Program Memory Usage 
                                Start         End      
                            ---------   ---------      
-                            0x000000    0x00001a      
+                            0x000000    0x000002      
+                            0x000004    0x000022      
                             0x002007    0x002007      
-            28 out of 2310 program addresses used, program memory utilization is 1%
+            35 out of 2310 program addresses used, program memory utilization is 1%
 
 
 
                               Symbols - Sorted by Name
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-                   ENABLE   0x000016    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
-                     INIT   0x000001    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
-                     LOOP   0x000011    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
-                  LOOPEND   0x000018    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
+                 HALLTRIG   0x00001d    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
+                     INIT   0x000005    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
+                      ISR   0x00001a    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
+                     LOOP   0x000017    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
+                  LOOPEND   0x000019    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
 
 
 
                               Symbols - Sorted by Address
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-                     INIT   0x000001    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
-                     LOOP   0x000011    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
-                   ENABLE   0x000016    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
-                  LOOPEND   0x000018    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
+                     INIT   0x000005    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
+                     LOOP   0x000017    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
+                  LOOPEND   0x000019    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
+                      ISR   0x00001a    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
+                 HALLTRIG   0x00001d    program     static C:\Data\OneDrive - Syddansk Erhvervsskole\Current\Electronics\Scalextric\main.asm
 
 

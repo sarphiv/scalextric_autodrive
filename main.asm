@@ -28,19 +28,15 @@
 	goto	ISR
 ; ******* SETUP *****************************************************
 INIT
-	;Pin setup
-	MOVLW	b'00000111'		;Disable comparators
+	;Comparator setup
+	MOVLW	b'00001101'		;Enable comparator 2, disable comparator 1. Set up comparator 2.
 	MOVWF	CMCON0
-
-	;Interupt setup
-	BSF		INTCON, 4		;Enable interupt on change on PORTA2
-	BSF		INTCON, 7		;Enable global interrupt switch
 	
 	;PWM setup
 	MOVLW	b'00001100'		;Enable PWM on PORTC5
 	MOVWF	CCP1CON
 	
-	MOVLW	d'190'			;PWM timer - Time on in a period
+	MOVLW	d'0'			;PWM timer - Time on in a period
 	MOVWF	CCPR1L
 
 	MOVLW	b'00000111'		;Enable TIMER2 and set prescaler to 16
@@ -51,12 +47,22 @@ INIT
 	MOVLW	d'255'			;PWM timer - Period time
 	MOVWF	PR2
 	
+	;Interupt setup
+	BSF		INTCON, 4		;Enable interupt on change on PORTA2
+	
+	BSF		INTCON, 6		;Enable peripheral interupts (for comparators)
+	BSF		PIE1, 4
+
+	BSF		INTCON, 7		;Enable global interrupt switch
+
 	;Pin setup
-	MOVLW	b'00000000'		;Change analog ports to digital
+	MOVLW	b'00110000'		;Change all ports to digital
+							;Comparators are exempt kept analog
 	MOVWF	ANSEL
 	
-					;A2/INT (hall) input
-	MOVLW	b'11001111'		;Set up input/output pins. C5 (motor), C4 (led) output. C0 (turn switch) input
+	MOVLW	b'11000111'		;Set up input/output pins. 
+							;C5 (motor), C4 (Comparator Out), C3 (LED), C2 (Turn switch), C1 C0 (Comparator -, +)
+							;A2/INT (hall) input (A2 is input by default)
 	MOVWF	TRISC			
 
 	BCF 	STATUS, RP0		;Change to bank 0
@@ -64,17 +70,10 @@ INIT
 ; ******* LOOP *****************************************************	
 LOOP
 	;Test program
-	BTFSC	PORTC, 0
-	GOTO	ENABLE
 
-	MOVLW	d'60'
+	MOVLW	d'160'
 	MOVWF	CCPR1L
 
-	GOTO 	LOOPEND
-
-ENABLE
-	MOVLW	d'190'
-	MOVWF	CCPR1L
 
 LOOPEND
 
@@ -83,7 +82,9 @@ LOOPEND
 ; ******* SUBROUTINES *****************************************************
 ISR
 	BTFSC	INTCON, 1		;Check if triggered by hall effect sensor
-	GOTO	HALLTRIG
+	CALL	HALLTRIG
+	BTFSC	PIR1, 1
+	CALL	COMPARATORTRIG
 
 	RETFIE
 	
@@ -92,14 +93,25 @@ HALLTRIG
 	BSF 	STATUS, RP0		;Change to bank 1
 	MOVLW	b'01000000'		;Toggle interrupt edge select bit
 	XORWF	OPTION_REG, F		;
-	BCF	STATUS, RP0		;Change to bank 0
+	BCF		STATUS, RP0		;Change to bank 0
 	
-	MOVLW	b'00010000'		;Change LED output
-	XORWF	PORTC, F
+	;MOVLW	b'00010000'		;Change LED output
+	;XORWF	PORTC, F
 	
 	
 	BCF		INTCON, 1	;Clear hall effect sensor interrupt flag
 
-	RETFIE
+	RETURN
+
+COMPARATORTRIG
+	;insert drift reset code for eeprom
+	
+
+
+	BCF		STATUS, RP0	;Change to bank 0
+	BCF		PIR1, 4		;Clear comparator 2 interrupt flag
+
+	RETURN
+	
 ; ******* END *******************************************************************
  	end

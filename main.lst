@@ -1,12 +1,12 @@
-MPASM  5.51                          MAIN.ASM   11-3-2017  12:41:16         PAGE  1
+MPASM  5.51                          MAIN.ASM   11-7-2017  12:33:45         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00001 ; ****** forbindelse af ICSP *********************  forbindelse af kredsløb ***************
+                      00001 ; ****** forbindelse af ICSP *********************  forbindelse af kredslÃ¸b ***************
                       00002 ;       Programmet forventes uploadet med en PICkit2 
-                      00003 ;       eller en PICkit3 pilen på PICkit angiver pin1 
+                      00003 ;       eller en PICkit3 pilen pÃ¥ PICkit angiver pin1 
                       00004 ;       Navn            PICkit  PIC16F684                                       Funktion                
                             PIC16F684
                       00005 ;       VPP/MCLR        1               4                                                               
@@ -38,68 +38,103 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00018                 ; no failsafe clock monitor, two-speed start-up disabled 
 2007   30C4           00019  __CONFIG _FCMEN_OFF & _IESO_OFF & _BOD_OFF & _CPD_OFF &    _CP_OFF & _MCLRE_OFF & _PWRTE_ON & _WDT_OFF 
                             & _INTRC_OSC_NOCLKOUT
-                      00020 ; ******* OPSÆTNING AF VARIABLE ***********************************************************
+                      00020 ; ******* OPSÃ†TNING AF VARIABLE ***********************************************************
                       00021 ; Skriv variable og konstanter ind her
                       00022 
-                      00023 ; ******* OPSÆTNING AF PROGRAM POINTERE ***************************************************
+                      00023 ; ******* OPSÃ†TNING AF PROGRAM POINTERE ***************************************************
                       00024         ORG     0x0000          ; processor reset vector
 0000   2???           00025         goto    INIT
-                      00026 ; ******* INITIALISERING AF CONTROLER *****************************************************
-0001                  00027 INIT
-0001   3007           00028         MOVLW   b'00000111'             ;Disable comparators
-0002   0099           00029         MOVWF   CMCON0
-                      00030 
-0003   300C           00031         MOVLW   b'00001100'             ;Enable PWM on PORTC5
-0004   0095           00032         MOVWF   CCP1CON
-                      00033         
-0005   30BE           00034         MOVLW   d'190'                  ;PWM timer - Time on in a period
-0006   0093           00035         MOVWF   CCPR1L
-                      00036 
-0007   3007           00037         MOVLW   b'00000111'             ;Enable TIMER2 and set prescaler to 16
-0008   0092           00038         MOVWF   T2CON
-MPASM  5.51                          MAIN.ASM   11-3-2017  12:41:16         PAGE  2
+                      00026 
+                      00027         ORG             0x0004
+0004   2???           00028         goto    ISR
+                      00029 ; ******* SETUP *****************************************************
+0005                  00030 INIT
+                      00031         ;Pin setup
+0005   3007           00032         MOVLW   b'00000111'             ;Disable comparators
+0006   0099           00033         MOVWF   CMCON0
+                      00034 
+                      00035         ;Interupt setup
+0007   160B           00036         BSF             INTCON, 4               ;Enable interupt on change on PORTA2
+0008   178B           00037         BSF             INTCON, 7               ;Enable global interrupt switch
+                      00038         
+MPASM  5.51                          MAIN.ASM   11-7-2017  12:33:45         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00039 
-0009   1683           00040         BSF     STATUS, RP0             ;Change to bank 1
-                      00041 
-000A   30FF           00042         MOVLW   d'255'                  ;PWM timer - Period time
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-000B   0092           00043         MOVWF   PR2
-                      00044 
-000C   3000           00045         MOVLW   b'00000000'             ;Change analog ports to digital
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-000D   0091           00046         MOVWF   ANSEL
-                      00047 
-000E   30CF           00048         MOVLW   b'11001111'             ;Set up input/output pins. C5 (motor), C4 (led) output. C0 (hall
-                            ), C1 (turn switch) input
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-000F   0087           00049         MOVWF   TRISC                   
+                      00039         ;PWM setup
+0009   300C           00040         MOVLW   b'00001100'             ;Enable PWM on PORTC5
+000A   0095           00041         MOVWF   CCP1CON
+                      00042         
+000B   30BE           00043         MOVLW   d'190'                  ;PWM timer - Time on in a period
+000C   0093           00044         MOVWF   CCPR1L
+                      00045 
+000D   3007           00046         MOVLW   b'00000111'             ;Enable TIMER2 and set prescaler to 16
+000E   0092           00047         MOVWF   T2CON
+                      00048 
+000F   1683           00049         BSF     STATUS, RP0             ;Change to bank 1
                       00050 
-0010   1283           00051         BCF     STATUS, RP0             ;Change to bank 0
-                      00052         
-0011                  00053 LOOP
-0011   1807           00054         BTFSC   PORTC, 0
-0012   2???           00055         GOTO    ENABLE
-                      00056 
-0013   303C           00057         MOVLW   d'60'
-0014   0093           00058         MOVWF   CCPR1L
-                      00059 
-0015   2???           00060         GOTO    LOOPEND
+0010   30FF           00051         MOVLW   d'255'                  ;PWM timer - Period time
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0011   0092           00052         MOVWF   PR2
+                      00053         
+                      00054         ;Pin setup
+0012   3000           00055         MOVLW   b'00000000'             ;Change analog ports to digital
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0013   0091           00056         MOVWF   ANSEL
+                      00057         
+                      00058                                         ;A2/INT (hall) input
+0014   30CF           00059         MOVLW   b'11001111'             ;Set up input/output pins. C5 (motor), C4 (led) output. C0 (turn
+                             switch) input
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0015   0087           00060         MOVWF   TRISC                   
                       00061 
-0016                  00062 ENABLE
-0016   30BE           00063         MOVLW   d'190'
-0017   0093           00064         MOVWF   CCPR1L
-                      00065 
-0018                  00066 LOOPEND
+0016   1283           00062         BCF     STATUS, RP0             ;Change to bank 0
+                      00063 
+                      00064 ; ******* LOOP *****************************************************    
+0017                  00065 LOOP
+                      00066         ;Test program
                       00067 
-0018   2???           00068         goto    LOOP
-                      00069 ; ******* PROGRAM SLUT *******************************************************************
-30C4                  00070         end
-MPASM  5.51                          MAIN.ASM   11-3-2017  12:41:16         PAGE  3
+0017   30A0           00068         MOVLW   d'160'
+0018   0093           00069         MOVWF   CCPR1L
+                      00070 
+                      00071 
+0019                  00072 LOOPEND
+                      00073 
+0019   2???           00074         goto    LOOP
+                      00075 
+                      00076 ; ******* SUBROUTINES *****************************************************
+001A                  00077 ISR
+001A   188B           00078         BTFSC   INTCON, 1               ;Check if triggered by hall effect sensor
+001B   2???           00079         GOTO    HALLTRIG
+                      00080 
+001C   0009           00081         RETFIE
+                      00082         
+001D                  00083 HALLTRIG
+                      00084         ;Toggle interrupt to trigger on rise or fall. This allows us to capture half rotations
+001D   1683           00085         BSF     STATUS, RP0             ;Change to bank 1
+001E   3040           00086         MOVLW   b'01000000'             ;Toggle interrupt edge select bit
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+MPASM  5.51                          MAIN.ASM   11-7-2017  12:33:45         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+001F   0681           00087         XORWF   OPTION_REG, F           ;
+0020   1283           00088         BCF             STATUS, RP0             ;Change to bank 0
+                      00089         
+                      00090         ;MOVLW  b'00010000'             ;Change LED output
+                      00091         ;XORWF  PORTC, F
+                      00092         
+                      00093         
+0021   108B           00094         BCF             INTCON, 1       ;Clear hall effect sensor interrupt flag
+                      00095 
+0022   0009           00096         RETFIE
+                      00097 ; ******* END *******************************************************************
+30C4                  00098         end
+MPASM  5.51                          MAIN.ASM   11-7-2017  12:33:45         PAGE  4
 
 
 SYMBOL TABLE
@@ -158,7 +193,7 @@ DC                                00000001
 DC1B0                             00000004
 DC1B1                             00000005
 ECCPAS                            00000017
-MPASM  5.51                          MAIN.ASM   11-3-2017  12:41:16         PAGE  4
+MPASM  5.51                          MAIN.ASM   11-7-2017  12:33:45         PAGE  5
 
 
 SYMBOL TABLE
@@ -177,16 +212,16 @@ EEDAT                             0000009A
 EEDATA                            0000009A
 EEIE                              00000007
 EEIF                              00000007
-ENABLE                            00000016
 F                                 00000001
 FSR                               00000004
 GIE                               00000007
 GO                                00000001
 GO_DONE                           00000001
 GO_NOT_DONE                       00000001
+HALLTRIG                          0000001D
 HTS                               00000002
 INDF                              00000000
-INIT                              00000001
+INIT                              00000005
 INTCON                            0000000B
 INTE                              00000004
 INTEDG                            00000006
@@ -209,20 +244,21 @@ IRCF0                             00000004
 IRCF1                             00000005
 IRCF2                             00000006
 IRP                               00000007
-LOOP                              00000011
-LOOPEND                           00000018
+ISR                               0000001A
+LOOP                              00000017
+LOOPEND                           00000019
 LTS                               00000001
 NOT_BOD                           00000000
 NOT_BOR                           00000000
 NOT_DONE                          00000001
 NOT_PD                            00000003
-NOT_POR                           00000001
-MPASM  5.51                          MAIN.ASM   11-3-2017  12:41:16         PAGE  5
+MPASM  5.51                          MAIN.ASM   11-7-2017  12:33:45         PAGE  6
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+NOT_POR                           00000001
 NOT_RAPU                          00000007
 NOT_T1SYNC                        00000002
 NOT_TO                            00000004
@@ -275,13 +311,13 @@ RC3                               00000003
 RC4                               00000004
 RC5                               00000005
 RD                                00000000
-RP0                               00000005
-MPASM  5.51                          MAIN.ASM   11-3-2017  12:41:16         PAGE  6
+MPASM  5.51                          MAIN.ASM   11-7-2017  12:33:45         PAGE  7
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RP0                               00000005
 RP1                               00000006
 SBODEN                            00000004
 SBOREN                            00000004
@@ -334,13 +370,13 @@ TRISA5                            00000005
 TRISC                             00000087
 TRISC0                            00000000
 TRISC1                            00000001
-TRISC2                            00000002
-MPASM  5.51                          MAIN.ASM   11-3-2017  12:41:16         PAGE  7
+MPASM  5.51                          MAIN.ASM   11-7-2017  12:33:45         PAGE  8
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+TRISC2                            00000002
 TRISC3                            00000003
 TRISC4                            00000004
 TRISC5                            00000005
@@ -393,13 +429,13 @@ _CPD_OFF                          00003FFF
 _CPD_ON                           00003F7F
 _CP_OFF                           00003FFF
 _CP_ON                            00003FBF
-_DEVID1                           00002006
-MPASM  5.51                          MAIN.ASM   11-3-2017  12:41:16         PAGE  8
+MPASM  5.51                          MAIN.ASM   11-7-2017  12:33:45         PAGE  9
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+_DEVID1                           00002006
 _EC_OSC                           00003FFB
 _EXTRC                            00003FFF
 _EXTRCIO                          00003FFE
@@ -441,6 +477,6 @@ __DEBUG                           1
 
 Errors   :     0
 Warnings :     0 reported,     0 suppressed
-Messages :     3 reported,     0 suppressed
+Messages :     4 reported,     0 suppressed
 
 
