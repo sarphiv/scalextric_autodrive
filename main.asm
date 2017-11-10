@@ -51,7 +51,7 @@ INIT
 	BSF		INTCON, 4		;Enable interupt on change on PORTA2
 	
 	BSF		INTCON, 6		;Enable peripheral interupts (for comparators)
-	BSF		PIE1, 4
+	BSF		PIE1, 4			;Enable comparator 2 interrupts
 
 	BSF		INTCON, 7		;Enable global interrupt switch
 
@@ -61,8 +61,8 @@ INIT
 	MOVWF	ANSEL
 	
 	MOVLW	b'11000111'		;Set up input/output pins. 
-							;C5 (motor), C4 (Comparator Out), C3 (LED), C2 (Turn switch), C1 C0 (Comparator -, +)
-							;A2/INT (hall) input (A2 is input by default)
+							;C5 (PWM signal), C4 (Comparator out), C3 (Drive signal), C2 (Turn switch), C1 C0 (Comparator -, +)
+							;A2 (Hall effect interrupt) input, A3 (State switch) (These are both input by default)
 	MOVWF	TRISC			
 
 	BCF 	STATUS, RP0		;Change to bank 0
@@ -104,16 +104,16 @@ HALLTRIG
 	RETURN
 
 COMPARATORTRIG
-	BCF		STATUS, RP0	;Change to bank 0
-	BTFSS	COMCON0, 7	;Check state of comparator
-	GOTO	COMPARATOREND
+	BCF		STATUS, RP0		;Change to bank 0
+	BTFSS	COMCON0, 7		;Check state of comparator
+	GOTO	COMPARATOREND	;Jump to end if not on rising edge of light (interrupt fires on any change)
 	
 	;Implement reset code for car position/state
 	
 
 COMPARATOREND
-	BCF		STATUS, RP0	;Change to bank 0
-	BCF		PIR1, 4		;Clear comparator 2 interrupt flag
+	BCF		STATUS, RP0		;Change to bank 0
+	BCF		PIR1, 4			;Clear comparator 2 interrupt flag
 
 	RETURN
 	
