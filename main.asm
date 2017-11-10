@@ -57,7 +57,7 @@ INIT
 
 	;Pin setup
 	MOVLW	b'00110000'		;Change all ports to digital
-							;Comparators are exempt kept analog
+							;Comparators are exempt and kept analog
 	MOVWF	ANSEL
 	
 	MOVLW	b'11000111'		;Set up input/output pins. 
@@ -98,16 +98,20 @@ HALLTRIG
 	;MOVLW	b'00010000'		;Change LED output
 	;XORWF	PORTC, F
 	
-	
+
 	BCF		INTCON, 1	;Clear hall effect sensor interrupt flag
 
 	RETURN
 
 COMPARATORTRIG
-	;insert drift reset code for eeprom
+	BCF		STATUS, RP0	;Change to bank 0
+	BTFSS	COMCON0, 7	;Check state of comparator
+	GOTO	COMPARATOREND
+	
+	;Implement reset code for car position/state
 	
 
-
+COMPARATOREND
 	BCF		STATUS, RP0	;Change to bank 0
 	BCF		PIR1, 4		;Clear comparator 2 interrupt flag
 
