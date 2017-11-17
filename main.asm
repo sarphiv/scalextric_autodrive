@@ -24,6 +24,19 @@ INCLUDE "p16f684.inc"
 ; ******* SETUP *****************************************************
 INIT
     TEST    RES	1	;currently testing things in hall effect
+    
+    ;Switch pin setup (this is only temporarily left here)
+    BSF	    STATUS, RP0	    ;Change to bank 1
+    MOVLW   b'10111111'	    ;Change C2 (turn switch) to digital
+    ANDWF   ANSEL, F
+    MOVLW   b'00000100'	    ;Set C2 (turn switch) to input
+    IORWF   TRISC, F			
+    
+    MOVLW   b'01111111'	    ;Change C3 (UNUSED) to digital
+    ANDWF   ANSEL, F
+    MOVLW   b'11110111'	    ;Set C3 (UNUSED) to output
+    ANDWF   TRISC, F
+    
 
     CALL    PWM_INIT
     CALL    HallEffect_INIT
@@ -31,25 +44,27 @@ INIT
 
     CALL    ISR_INIT
 
-    ;Switch pin setup (this is only temporarily left here)
-    BSF	    STATUS, RP0	    ;Change to bank 1
-    MOVLW   b'10111111'	    ;Change C2 (turn switch) to digital
-    ANDWF   ANSEL, F
-
-    MOVLW   b'00000100'	    ;Set C2 (turn switch) to input
-    IORWF   TRISC, F			
-					
+    
+    
     ;C5 (PWM signal), C4 (Comparator out), C3 UNUSED, C2 (Turn switch), C1 C0 (Comparator -, +)
     ;A2 (Hall effect interrupt) input, A3 (State switch) (These are both input by default)
 
 ; ******* MAIN LOOP *****************************************************	
 LOOP
     ;Test program
-
-    ;MOVLW  d'160'
-    ;CALL   PWM_SET
-	
-    NOP
+;    BCF	    STATUS, RP0
+;    
+;    BTFSS   PORTC, 2
+;    GOTO    TURNOFF
+;    
+;    MOVLW   d'100'
+;    MOVWF   CCPR1L		;Load new PWM on time to CCPR1L
+;    
+;    GOTO    LOOPEND
+;
+;TURNOFF
+;    MOVLW   d'180'
+;    MOVWF   CCPR1L		;Load new PWM on time to CCPR1L
 
 LOOPEND
     GOTO    LOOP

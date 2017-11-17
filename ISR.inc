@@ -8,12 +8,13 @@ ISR_INIT
 
 ISR
     MOVWF   ISR_WCopy		;Create copy of working register to not interfere with main loop
-
+    
+    BCF	    STATUS, RP0		;Change to bank 0
     
     BTFSC   INTCON, INTF	;Check if triggered by hall effect sensor
     CALL    HallEffect_TRIG
     
-    BTFSC   PIR1, C2IF		;Check if triggered by turn switch
+    BTFSC   PIR1, C2IF		;Check if triggered by LDR change
     CALL    LDR_TRIG
 
     
