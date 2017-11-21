@@ -19,11 +19,17 @@ INCLUDE "p16f684.inc"
 #INCLUDE    "PWM.inc"
 #INCLUDE    "HallEffect.inc"
 #INCLUDE    "LDR.inc"
+#INCLUDE    "LapCounter.inc"
+#INCLUDE    "EEPROM.inc"
 #INCLUDE    "ISR.inc"
 	
 ; ******* SETUP *****************************************************
 INIT
-    TEST    RES	1	;currently testing things in hall effect
+    TEST    RES	1	;currently testing things
+    
+    RSTAT   RES	1	    ;Status register for car
+   ;RSTAT bit definitions
+    RUN	    EQU	0	    ;Running - The state of the race. 1 = Race, 0 = Stop
     
     ;Switch pin setup (this is only temporarily left here)
     BSF	    STATUS, RP0	    ;Change to bank 1
@@ -37,20 +43,22 @@ INIT
     MOVLW   b'11110111'	    ;Set C3 (UNUSED) to output
     ANDWF   TRISC, F
     
-
     CALL    PWM_INIT
     CALL    HallEffect_INIT
     CALL    LDR_INIT
+    CALL    EE_INIT
 
     CALL    ISR_INIT
-
-    
     
     ;C5 (PWM signal), C4 (Comparator out), C3 UNUSED, C2 (Turn switch), C1 C0 (Comparator -, +)
     ;A2 (Hall effect interrupt) input, A3 (State switch) (These are both input by default)
 
 ; ******* MAIN LOOP *****************************************************	
 LOOP
+;    BTFSS   TEST, 0
+;    BSF	    PORTC, 3
+;    BTFSC   TEST, 0
+;    BCF	    PORTC, 3
     ;Test program
 ;    BCF	    STATUS, RP0
 ;    
@@ -61,10 +69,10 @@ LOOP
 ;    MOVWF   CCPR1L		;Load new PWM on time to CCPR1L
 ;    
 ;    GOTO    LOOPEND
-;
-;TURNOFF
-;    MOVLW   d'180'
+;;
+;    MOVF    TEST, W
 ;    MOVWF   CCPR1L		;Load new PWM on time to CCPR1L
+    NOP
 
 LOOPEND
     GOTO    LOOP
