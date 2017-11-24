@@ -23,10 +23,7 @@ LDR_TRIG
     BTFSS   CMCON0, C2OUT	;Check state of comparator
     GOTO    LDR_TRIG_END	;Jump to end if not on rising edge of light because interrupt fires on any change
     
-    ;test code
-;    MOVLW	b'00001000'	;Toggle test pin
-;    XORWF	PORTC, F
-    ;Implement reset code for car position/state
+    CALL    LAP_UPDATE
 
 LDR_TRIG_END
     BCF		STATUS, RP0	;Change to bank 0

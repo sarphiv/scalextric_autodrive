@@ -30,6 +30,8 @@ INIT
     RSTAT   RES	1	    ;Status register for car
    ;RSTAT bit definitions
     RUN	    EQU	0	    ;Running - The state of the race. 1 = Race, 0 = Stop
+    MODE    EQU	1	    ;Mode - Toggle reading/write to EEPROM. 1 = Recon, 0 = Race
+    
     
     ;Switch pin setup (this is only temporarily left here)
     BSF	    STATUS, RP0	    ;Change to bank 1
@@ -45,13 +47,19 @@ INIT
     
     CALL    PWM_INIT
     CALL    HallEffect_INIT
+    
     CALL    LDR_INIT
+    CALL    LAP_INIT
+    
     CALL    EE_INIT
 
     CALL    ISR_INIT
     
+    
     ;C5 (PWM signal), C4 (Comparator out), C3 UNUSED, C2 (Turn switch), C1 C0 (Comparator -, +)
     ;A2 (Hall effect interrupt) input, A3 (State switch) (These are both input by default)
+    
+    ;Insert code that determines race vs. recon state
 
 ; ******* MAIN LOOP *****************************************************	
 LOOP
@@ -59,20 +67,16 @@ LOOP
 ;    BSF	    PORTC, 3
 ;    BTFSC   TEST, 0
 ;    BCF	    PORTC, 3
-    ;Test program
-;    BCF	    STATUS, RP0
-;    
-;    BTFSS   PORTC, 2
-;    GOTO    TURNOFF
-;    
-;    MOVLW   d'100'
-;    MOVWF   CCPR1L		;Load new PWM on time to CCPR1L
-;    
-;    GOTO    LOOPEND
-;;
-;    MOVF    TEST, W
-;    MOVWF   CCPR1L		;Load new PWM on time to CCPR1L
-    NOP
+;    Test program
+    BCF	    STATUS, RP0
+    
+    BTFSS   PORTC, 2
+    MOVLW   d'150'
+    BTFSC   PORTC, 2
+    MOVLW   d'140'
+    
+    CALL    PWM_SET
+;    NOP
 
 LOOPEND
     GOTO    LOOP
