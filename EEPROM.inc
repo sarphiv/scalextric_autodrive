@@ -1,12 +1,9 @@
 ; EE_INIT skal kaldes ved lap start og map
 EE_INIT
-		MOVLW	h'0'
-		MOVWF	EE_DATA
+		CLRF	EE_DATA
+		CLRF	EE_ADR
 		
-		MOVLW	h'0'
-		MOVWF	EE_ADR
-
-		MOVLW	b'0000001'		; b'1', er same, men det her er visuelt
+		MOVLW	b'1'			; Initialize mask
 		MOVWF	EE_MASK 
 		
 		RETURN
