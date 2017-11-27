@@ -1,7 +1,4 @@
-EE_INIT
-EE_ADR	RES	1		; Assign var to EE_ADR
-EE_DATA	RES	1		; Assign var to EE_DATA
-		
+EE_INIT	
 		MOVLW	h'00'
 		MOVWF	EE_DATA
 		

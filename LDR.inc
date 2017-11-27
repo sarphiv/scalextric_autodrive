@@ -24,6 +24,7 @@ LDR_TRIG
     GOTO    LDR_TRIG_END	;Jump to end if not on rising edge of light because interrupt fires on any change
     
     CALL    LAP_UPDATE
+    
 
 LDR_TRIG_END
     BCF		STATUS, RP0	;Change to bank 0
