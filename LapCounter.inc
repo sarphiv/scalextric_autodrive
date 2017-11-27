@@ -21,13 +21,11 @@ LAP_UPDATE
 
 LAP_UPDATE_RECON
     BCF	    STATUS, RP0		;Change to bank 0
-;    MOVLW   b'00001000'
-;    XORWF   PORTC, F
     
     INCF    LAP_Laps, F		;Increment laps by one
     
     MOVF    LAP_Laps, W		;Calculate if Laps <= 2 (one run on the track)
-    SUBLW   h'02'
+    SUBLW   h'01'
     
     BTFSC   STATUS, 0		;If under or equal, set RUN bit in RSTAT
     BSF	    RSTAT, RUN	    

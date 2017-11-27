@@ -20,7 +20,7 @@ INCLUDE "p16f684.inc"
     RUN		EQU	0   ;Running - The state of motor. 1 = Race, 0 = Stop
     MODE	EQU	1   ;Mode - Toggle reading/write to EEPROM. 1 = Recon, 0 = Race
     BANKBIT	EQU	0   ;Status bank bit
-    TOTALLAPS   EQU	4   ;Total number of laps minus 1
+    TOTALLAPS   EQU	3   ;Total number of laps
 			    ;Because start is included as a lap
     
     cblock  0x20
@@ -55,10 +55,15 @@ INIT
     MOVLW   b'00000100'	    ;Set C2 (turn switch) to input
     IORWF   TRISC, F			
     
+    ;
     MOVLW   b'01111111'	    ;Change C3 (UNUSED) to digital
     ANDWF   ANSEL, F
     MOVLW   b'11110111'	    ;Set C3 (UNUSED) to output
     ANDWF   TRISC, F
+    
+    ;State switch (A3)
+    MOVLW   b'00001000'	    ;Set A3 (State switch) to input
+    IORWF   TRISA, F
     
     
     CALL    PWM_INIT
@@ -73,8 +78,12 @@ INIT
     
     
     BCF	    STATUS, RP0
-;    BSF	    PORTC, 3
+    
+    ;Check if recon or race mode is selected
+    BTFSC   PORTA, 3
     BSF	    RSTAT, MODE	    ;Recon mode
+    BTFSS   PORTA, 3
+    BCF	    RSTAT, MODE	    ;Race mode
     ;C5 (PWM signal), C4 (Comparator out), C3 UNUSED, C2 (Turn switch), C1 C0 (Comparator -, +)
     ;A2 (Hall effect interrupt) input, A3 (State switch) (These are both input by default)
     
