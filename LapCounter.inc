@@ -1,6 +1,8 @@
 ;Keeps track of laps
     
 LAP_INIT
+    CALL    LDR_INIT
+    
     BCF	    STATUS, RP0		;Change to bank 0
     MOVLW   h'00'
     MOVWF   LAP_Laps
@@ -11,7 +13,7 @@ LAP_INIT
 
 LAP_UPDATE
     BCF	    STATUS, RP0		;Change to bank 0
-    BTFSS   RSTAT, MODE
+    BTFSS   RSTAT, MODE		;Figure out update type
     GOTO    LAP_UPDATE_RACE
     ;else   
     GOTO    LAP_UPDATE_RECON
@@ -27,12 +29,9 @@ LAP_UPDATE_RECON
     MOVF    LAP_Laps, W		;Calculate if Laps <= 2 (one run on the track)
     SUBLW   h'01'
     
-    BTFSC   STATUS, 0		;If under or equal, set RUN bit in RSTAT
-    BSF	    RSTAT, RUN	    
-    BTFSS   STATUS, 0		;If over, clear RUN bit in RSTAT
-    BCF	    RSTAT, RUN
+    GOTO    LAP_UPDATE_RUN
     
-    RETURN
+    RETURN			;This line should never be reached
     
 LAP_UPDATE_RACE
     BCF	    STATUS, RP0		;Change to bank 0
@@ -41,9 +40,14 @@ LAP_UPDATE_RACE
     MOVF    LAP_Laps, W		;Calculate if Laps <= TotalLaps
     SUBLW   TOTALLAPS		
     
-    BTFSC   STATUS, 0		;If under or equal, set RUN bit in RSTAT
-    BSF	    RSTAT, RUN
-    BTFSS   STATUS, 0		;If over, clear RUN bit in RSTAT
-    BCF	    RSTAT, RUN
+    GOTO    LAP_UPDATE_RUN
+    
+    RETURN			;This line should never be reached
+    
+ LAP_UPDATE_RUN
+    BTFSC   STATUS, 0		;If under or equal
+    CALL    MOTOR_RESTART	;stop stop, this line might be wrong
+    BTFSS   STATUS, 0		;If over
+    CALL    MOTOR_STOP
     
     RETURN

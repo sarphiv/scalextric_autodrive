@@ -16,20 +16,18 @@ ISR
     
     BCF	    STATUS, RP0		;Change to bank 0
     
+    BTFSC   PIR1, C2IF		;Check if triggered by LDR change
+    CALL    LDR_TRIG
+    
     BTFSC   INTCON, INTF	;Check if triggered by hall effect sensor
     CALL    HallEffect_TRIG
     
-    BTFSC   PIR1, C2IF		;Check if triggered by LDR change
-    CALL    LDR_TRIG
-
     
     CALL    ISR_RESTORE
 
     RETFIE
     
 ISR_BACKUP  
-    MOVWF   ISR_WCopy		;Backup working register
-    
     BTFSS   STATUS, RP0		;Backup bank select bit
     GOTO    BANKBIT_CLEAR
     ;else
@@ -37,12 +35,15 @@ BANKBIT_SET
     BCF	    STATUS, RP0		;Change to bank 0
     BSF	    ISR_BCopy, BANKBIT
     
-    RETURN
+    GOTO    WORKING_COPY
     
 BANKBIT_CLEAR
     BCF	    STATUS, RP0		;Change to bank 0
     BCF	    ISR_BCopy, BANKBIT
-
+    
+WORKING_COPY
+    MOVWF   ISR_WCopy		;Backup working register
+    
     RETURN
     
 ISR_RESTORE

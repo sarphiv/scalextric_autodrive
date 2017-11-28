@@ -13,19 +13,12 @@ HallEffect_INIT
 
 HallEffect_TRIG
     ;Toggle interrupt to trigger on rise or fall. This allows us to capture half rotations
-    BSF 	STATUS, RP0		;Change to bank 1
-    MOVLW	b'01000000'		;Toggle interrupt edge select bit
-    XORWF	OPTION_REG, F		;
-
+    BSF	    STATUS, RP0		;Change to bank 1
+    MOVLW   b'01000000'		;Toggle interrupt edge select bit
+    XORWF   OPTION_REG, F   
     	
-    ;Test code
-;    MOVLW	h'69'
-;    CALL	EE_WRITE
-;    BCF		STATUS, RP0	;Change to bank 0
-;    MOVLW	b'00001000'	;Toggle test pin
-;    XORWF	PORTC, F
-
-;    GOTO	HallEffect_TRIG_END
+    CALL    MOTOR_UPDATE
+    
 
 HallEffect_TRIG_END
     BCF	INTCON, INTF		;Clear hall effect sensor interrupt flag
