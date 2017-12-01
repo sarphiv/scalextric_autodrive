@@ -6,7 +6,7 @@ INCLUDE "p16f684.inc"
 ; ext reset, no code or data protect, no brownout detect,
 ; no watchdog, power-up timer, int clock with I/O,
 ; no failsafe clock monitor, two-speed start-up disabled 
- __CONFIG _FCMEN_OFF & _IESO_OFF & _BOD_OFF & _CPD_OFF &    _CP_OFF & _MCLRE_OFF & _PWRTE_ON & _WDT_OFF & _INTRC_OSC_NOCLKOUT
+ __CONFIG _FCMEN_OFF & _IESO_OFF & _BOD_OFF & _CPD_OFF &  _CP_OFF & _MCLRE_OFF & _PWRTE_ON & _WDT_OFF & _INTRC_OSC_NOCLKOUT
 
 ; ******* Vectors ***************************************************	
     ORG	    0x0000	;Processor reset vector
@@ -37,6 +37,7 @@ INCLUDE "p16f684.inc"
     EE_DATA
     EE_ADR
     EE_MASK
+    EE_BUFF
     LAP_Laps
     endc
 
