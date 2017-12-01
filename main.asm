@@ -6,7 +6,7 @@ INCLUDE "p16f684.inc"
 ; ext reset, no code or data protect, no brownout detect,
 ; no watchdog, power-up timer, int clock with I/O,
 ; no failsafe clock monitor, two-speed start-up disabled 
- __CONFIG _FCMEN_OFF & _IESO_OFF & _BOD_OFF & _CPD_OFF &    _CP_OFF & _MCLRE_OFF & _PWRTE_ON & _WDT_OFF & _INTRC_OSC_NOCLKOUT
+ __CONFIG _FCMEN_OFF & _IESO_OFF & _BOD_OFF & _CPD_OFF &  _CP_OFF & _MCLRE_OFF & _PWRTE_ON & _WDT_OFF & _INTRC_OSC_NOCLKOUT
 
 ; ******* Vectors ***************************************************	
     ORG	    0x0000	;Processor reset vector
@@ -30,6 +30,7 @@ INCLUDE "p16f684.inc"
     EE_DATA
     EE_ADR
     EE_MASK
+    EE_BUFF
     LAP_Laps
     endc
 
@@ -72,7 +73,7 @@ INIT
     CALL    LDR_INIT
     CALL    LAP_INIT
     
-;    CALL    EE_INIT
+    CALL    EE_INIT
 
     CALL    ISR_INIT
     
@@ -92,10 +93,10 @@ INIT
 ; ******* MAIN LOOP *****************************************************	
 LOOP
     BCF	    STATUS, RP0		;Change to bank 0
-    BTFSC   RSTAT, RUN
-    BSF	    PORTC, 3
-    BTFSS   RSTAT, RUN
-    BCF	    PORTC, 3
+;    BTFSC   RSTAT, RUN
+;    BSF	    PORTC, 3
+;    BTFSS   RSTAT, RUN
+;    BCF	    PORTC, 3
     
 ;   Turn switch control program
 ;    BCF	    STATUS, RP0

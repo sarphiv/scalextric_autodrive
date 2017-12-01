@@ -17,15 +17,45 @@ HallEffect_TRIG
     MOVLW	b'01000000'		;Toggle interrupt edge select bit
     XORWF	OPTION_REG, F		;
 
-    	
     ;Test code
-;    MOVLW	h'69'
-;    CALL	EE_WRITE
-;    BCF		STATUS, RP0	;Change to bank 0
-;    MOVLW	b'00001000'	;Toggle test pin
+;    BCF		STATUS, RP0
+;    MOVLW	b'00001000'
 ;    XORWF	PORTC, F
+    
+;    CALL	EE_SET			;
+;    CALL	EE_CLR
+;    CALL	EE_SET			;
+;    CALL	EE_CLR
+;    CALL	EE_SET			;
+;    CALL	EE_CLR
+;    CALL	EE_SET			;
+;    CALL	EE_CLR
+    
+;    MOVLW	d'255'
+;    CALL	EE_WRITE_BYTE
+;    
+;    MOVLW	d'140'
+;    CALL	EE_WRITE_BYTE
+;    
+;    MOVLW	d'55'
+;    CALL	EE_WRITE_BYTE
+;    
+;    MOVLW	d'200'
+;    CALL	EE_WRITE_BYTE
+    
+    CALL    EE_READ_BYTE
+    MOVF    EE_BUFF, W
+    CALL    PWM_SET
+    INCF    EE_ADR, F
+;    BCF		STATUS, RP0	;Change to bank 0
+;    BCF		PORTC, 3
+;    CALL	EE_READ_BIT	; 
+;    ANDLW	b'1'
+;    BCF		STATUS, RP0
+;    BTFSS	STATUS, Z
+;    BSF		PORTC, 3
 
-;    GOTO	HallEffect_TRIG_END
+    GOTO	HallEffect_TRIG_END
 
 HallEffect_TRIG_END
     BCF	INTCON, INTF		;Clear hall effect sensor interrupt flag

@@ -28,8 +28,6 @@ ISR
     RETFIE
     
 ISR_BACKUP  
-    MOVWF   ISR_WCopy		;Backup working register
-    
     BTFSS   STATUS, RP0		;Backup bank select bit
     GOTO    BANKBIT_CLEAR
     ;else
@@ -37,12 +35,15 @@ BANKBIT_SET
     BCF	    STATUS, RP0		;Change to bank 0
     BSF	    ISR_BCopy, BANKBIT
     
-    RETURN
+    GOTO    WORKING_COPY
     
 BANKBIT_CLEAR
     BCF	    STATUS, RP0		;Change to bank 0
     BCF	    ISR_BCopy, BANKBIT
 
+WORKING_COPY
+    MOVWF   ISR_WCopy		;Backup working register
+    
     RETURN
     
 ISR_RESTORE
