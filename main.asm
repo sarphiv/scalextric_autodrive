@@ -92,21 +92,6 @@ INIT
 
 ; ******* MAIN LOOP *****************************************************	
 LOOP
-    BCF	    STATUS, RP0		;Change to bank 0
-;    BTFSC   RSTAT, RUN
-;    BSF	    PORTC, 3
-;    BTFSS   RSTAT, RUN
-;    BCF	    PORTC, 3
-    
-;   Turn switch control program
-;    BCF	    STATUS, RP0
-;    
-;    BTFSS   PORTC, 2
-;    MOVLW   d'150'
-;    BTFSC   PORTC, 2
-;    MOVLW   d'140'
-;    
-;    CALL    PWM_SET
     NOP
 
     GOTO    LOOP
