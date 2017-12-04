@@ -13,6 +13,9 @@ LAP_INIT
 
 LAP_UPDATE
     BCF	    STATUS, RP0		;Change to bank 0
+    
+    INCF    LAP_Laps, F		;Increment laps by one
+    
     BTFSS   RSTAT, MODE		;Figure out update type
     GOTO    LAP_UPDATE_RACE
     ;else   
@@ -22,32 +25,30 @@ LAP_UPDATE
     RETURN			;This line should never be reached
 
 LAP_UPDATE_RECON
-    BCF	    STATUS, RP0		;Change to bank 0
+    BCF	    STATUS, RP0		;Change to bank 0   
     
-    INCF    LAP_Laps, F		;Increment laps by one
-    
-    MOVF    LAP_Laps, W		;Calculate if Laps <= 2 (one run on the track)
+    MOVF    LAP_Laps, W		;Calculate if Laps <= 1 (one run on the track)
     SUBLW   h'01'
     
-    GOTO    LAP_UPDATE_RUN
+    BTFSC   STATUS, 0		;If at first lap (right at the start)
+    CALL    MOTOR_RESTART	;Reset EEPROM and start motor
+    BTFSS   STATUS, 0		;If recon lap finished
+    GOTO    LAP_UPDATE_SWITCH   ;Switch to race mode and start race round
     
-    RETURN			;This line should never be reached
+    RETURN
+    
+LAP_UPDATE_SWITCH
+    BCF	    RSTAT, MODE		;Set to race mode
     
 LAP_UPDATE_RACE
     BCF	    STATUS, RP0		;Change to bank 0
-    INCF    LAP_Laps, F		;Increment laps by one
     
     MOVF    LAP_Laps, W		;Calculate if Laps <= TotalLaps
     SUBLW   TOTALLAPS		
     
-    GOTO    LAP_UPDATE_RUN
+    BTFSC   STATUS, 0		;If under or equal TOTALLAPS
+    CALL    MOTOR_RESTART	;STOP STOP, this line might be wrong
+    BTFSS   STATUS, 0		;If over TOTALLAPS 
+    CALL    MOTOR_STOP		;Stop motor and reset EEPROM
     
-    RETURN			;This line should never be reached
-    
- LAP_UPDATE_RUN
-    BTFSC   STATUS, 0		;If under or equal
-    CALL    MOTOR_RESTART	;stop stop, this line might be wrong
-    BTFSS   STATUS, 0		;If over
-    CALL    MOTOR_STOP
-    
-    RETURN
+    RETURN			
