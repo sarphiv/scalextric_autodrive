@@ -23,4 +23,4 @@ HallEffect_TRIG
 HallEffect_TRIG_END
     BCF	INTCON, INTF		;Clear hall effect sensor interrupt flag
 
-    RETURN
+    RETURN    
