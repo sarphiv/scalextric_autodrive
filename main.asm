@@ -16,12 +16,19 @@ INCLUDE "p16f684.inc"
     goto    ISR
 
  ; ****** Memory and constants ***********************************
- ;RSTAT bit definitions
-    RUN		EQU	0   ;Running - The state of motor. 1 = Race, 0 = Stop
-    MODE	EQU	1   ;Mode - Toggle reading/write to EEPROM. 1 = Recon, 0 = Race
-    BANKBIT	EQU	0   ;Status bank bit
-    TOTALLAPS   EQU	3   ;Total number of laps
-			    ;Because start is included as a lap
+    ;RSTAT bit definitions
+    RUN			EQU	0	;Running - The state of motor. 1 = Race, 0 = Stop
+    MODE		EQU	1	;Mode - Toggle reading/write to EEPROM. 1 = Recon, 0 = Race
+    SLOW		EQU	2	;Slow - State of the motor speed
+    ;ISR constants
+    BANKBIT		EQU	0	;Status bank bit
+    ;LDR constants
+    TOTALLAPS		EQU	3	;Total number of laps
+    ;Motor constants
+    SPEED_RACE_TURN	EQU	d'90'	;Speed while turning in race mode
+    SPEED_RACE_STRAIGHT	EQU	d'150'	;Speed driving straight in race mode
+    SPEED_RECON_NORMAL	EQU	d'70'	;Speed in recon mode
+
     
     cblock  0x20
     RSTAT		    ;Status register for car
@@ -37,6 +44,7 @@ INCLUDE "p16f684.inc"
 ; ******* MODULES *******************************************************
 #INCLUDE    "PWM.inc"
 #INCLUDE    "HallEffect.inc"
+#INCLUDE    "Motor.inc"
 #INCLUDE    "LDR.inc"
 #INCLUDE    "LapCounter.inc"
 #INCLUDE    "EEPROM.inc"
@@ -66,32 +74,25 @@ INIT
     MOVLW   b'00001000'	    ;Set A3 (State switch) to input
     IORWF   TRISA, F
     
-    
-    CALL    PWM_INIT
-    CALL    HallEffect_INIT
-    
-    CALL    LDR_INIT
+    CALL    MOTOR_INIT
     CALL    LAP_INIT
-    
     CALL    EE_INIT
-
     CALL    ISR_INIT
     
-    
+    ;Check if recon or race mode is selected
     BCF	    STATUS, RP0
     
-    ;Check if recon or race mode is selected
     BTFSC   PORTA, 3
     BSF	    RSTAT, MODE	    ;Recon mode
     BTFSS   PORTA, 3
     BCF	    RSTAT, MODE	    ;Race mode
+    
     ;C5 (PWM signal), C4 (Comparator out), C3 UNUSED, C2 (Turn switch), C1 C0 (Comparator -, +)
     ;A2 (Hall effect interrupt) input, A3 (State switch) (These are both input by default)
     
-    ;Insert code that determines race vs. recon state
-
 ; ******* MAIN LOOP *****************************************************	
 LOOP
+
     NOP
 
     GOTO    LOOP
