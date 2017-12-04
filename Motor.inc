@@ -37,7 +37,7 @@ MOTOR_UPDATE_RECON_SET		;This method prevents double writes
     RETURN
     
 MOTOR_UPDATE_RACE
-    CALL    EE_READ
+;    CALL    EE_READ
     
     ANDLW   h'01'		;Figure out if turning or not
     BTFSS   STATUS, 2		;Load turning speed

@@ -16,8 +16,16 @@ HallEffect_TRIG
     BSF	    STATUS, RP0		;Change to bank 1
     MOVLW   b'01000000'		;Toggle interrupt edge select bit
     XORWF   OPTION_REG, F   
-    	
-    CALL    MOTOR_UPDATE
+
+    BCF	    STATUS, RP0
+    CALL    EE_SET
+    CALL    EE_CLR
+    CALL    EE_CLR
+    CALL    EE_SET
+    CALL    EE_CLR
+    CALL    EE_SET
+    CALL    EE_SET
+    CALL    EE_CLR
     
 
 HallEffect_TRIG_END

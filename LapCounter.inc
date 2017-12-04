@@ -44,7 +44,7 @@ LAP_UPDATE_RACE
     
     RETURN			;This line should never be reached
     
- LAP_UPDATE_RUN
+LAP_UPDATE_RUN
     BTFSC   STATUS, 0		;If under or equal
     CALL    MOTOR_RESTART	;stop stop, this line might be wrong
     BTFSS   STATUS, 0		;If over

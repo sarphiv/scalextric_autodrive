@@ -2,10 +2,11 @@
 EE_INIT
 		BCF	STATUS, RP0
 		CLRF	EE_DATA
-		MOVLW	h'00'
-		MOVWF	EE_ADR
+		CLRF	EE_ADR
 		CALL	EE_READ_BYTE
 		MOVWF	EE_BUFF
+		
+		CLRF	EE_ADR
 		
 		MOVLW	d'1'			; Initialize mask
 		MOVWF	EE_MASK 
@@ -25,6 +26,9 @@ EE_READ_BYTE
 		
 		BCF	STATUS, RP0
 		MOVWF	EE_BUFF
+		
+		INCF	EE_ADR, F		; Increment memory adress pointer
+		
 		RETURN
 		
 EE_WRITE_BYTE
@@ -95,10 +99,10 @@ EE_READ_BIT
 		BCF	STATUS, RP0
 		MOVF	EE_BUFF, W
 		ANDWF	EE_MASK, W		; And EEDAT w/ mask
-		BTFSC	STATUS, Z		; If EEDAT AND MASK is nonzero
-		MOVLW	d'1'			; If true, return 1
+		BTFSC	STATUS, Z		; If EEDAT AND MASK is zero
+		MOVLW	d'0'			; If true, return 0
 		BTFSS	STATUS, Z		;
-		MOVLW	d'0'			; If false, return 0
+		MOVLW	d'1'			; If false, return 1
 ; Bitshift mask
 		BTFSC	EE_MASK, 7
 		GOTO	CDN1
@@ -110,5 +114,4 @@ CDN1
 		RLF	EE_MASK, F
 		RLF	EE_MASK, F
 		CALL	EE_READ_BYTE
-		INCF	EE_ADR, F		; Icrement pointer
 		RETURN
