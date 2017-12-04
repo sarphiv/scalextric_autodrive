@@ -92,24 +92,7 @@ INIT
     
 ; ******* MAIN LOOP *****************************************************	
 LOOP
-    BCF	    STATUS, RP0		;Change to bank 0
-    
-;    BTFSS   RSTAT, RUN
-;    BCF	    PORTC, 3
-;    BTFSC   RSTAT, RUN
-;    BSF	    PORTC, 3
-    ;magnets were put in, in reverse
-;    BTFSS   PORTC, 2
-;    MOVLW   d'75'
-;    BTFSC   PORTC, 2
-;    MOVLW   d'100'
-    
-;    BTFSS   RSTAT, RUN
-;    MOVLW   d'0'
-    
-;    CALL    PWM_SET
-    
-    
+
     NOP
 
     GOTO    LOOP
