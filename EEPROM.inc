@@ -8,9 +8,9 @@ EE_INIT
 		
 		CLRF	EE_ADR
 		
-		MOVLW	d'1'			; Initialize mask
+		MOVLW	h'01'			; Initialize mask
 		MOVWF	EE_MASK 
-		
+		BCF	STATUS, C
 		RETURN
 	
 EE_READ_BYTE
@@ -80,6 +80,7 @@ EE_CLR
 		GOTO	EE_WRITE_BIT
 		
 EE_WRITE_BIT	
+		BCF	STATUS, C		; Clear Carry
 		MOVWF	EE_DATA			; Save buffer
 		BTFSC	EE_MASK, 7		; If last bit is set
 		GOTO	CDN
@@ -96,6 +97,7 @@ CDN
 		
 EE_READ_BIT
 ; Check if n bit is set
+		BCF	STATUS, C
 		BCF	STATUS, RP0
 		MOVF	EE_BUFF, W
 		ANDWF	EE_MASK, W		; And EEDAT w/ mask
