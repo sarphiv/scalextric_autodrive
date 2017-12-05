@@ -27,12 +27,12 @@ MOTOR_UPDATE_RECON
     BTFSC   PORTC, 2		;Check if turning
     GOTO    MOTOR_UPDATE_RECON_SET
     ;else
-;    CALL    EE_CLR		;Write 0 to EEProm
+    CALL    EE_CLR		;Write 0 to EEProm
     
     RETURN
     
 MOTOR_UPDATE_RECON_SET		;This method prevents double writes
-;    CALL    EE_SET		;Write 1 to EEProm
+    CALL    EE_SET		;Write 1 to EEProm
     
     RETURN
     
