@@ -16,7 +16,7 @@ EE_INIT
 ; Should be called after RECON finished
 EE_SET_LEN
 		MOVF	EE_ADR, W
-		MOWF	EE_LEN
+		MOVWF	EE_LEN
 		RETURN
 
 EE_READ_BYTE
