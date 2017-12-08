@@ -27,9 +27,7 @@ EE_READ_BYTE
 		SUBWF	EE_LEN			; EE_LEN minus EE_ADR
 		BTFSC	STATUS, Z		; Check zero flag
 		CLRF	EE_ADR			; If zero, clear EE_ADR
-		BTFSS	STATUS, Z		; 
-		NOP				; If non-zero, do nothing	
-		
+
 		BSF	STATUS, RP0		; Select bank 1
 		MOVWF	EEADR			; Address to read
 		ADDLW	EE_LOOK
