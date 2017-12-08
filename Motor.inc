@@ -7,7 +7,7 @@ MOTOR_INIT
     RETURN
 
 MOTOR_UPDATE
-    BCF	    STATUS, RP0
+    BCF	    STATUS, RP0		;Bank 0
     BTFSS   RSTAT, RUN		;Return if not running
     RETURN
     
@@ -39,16 +39,24 @@ MOTOR_UPDATE_RECON_SET		;This method prevents double writes
 MOTOR_UPDATE_RACE
     CALL    EE_READ_BIT
     
+    BCF	    STATUS, RP0		;Bank 0
+    
     ANDLW   h'01'		;Figure out if turning or not
+    
+    BTFSS   STATUS, 2		;Turn on brake light
+    BSF	    PORTC, 3
+    BTFSC   STATUS, 2		;Turn off brake light
+    BCF	    PORTC, 3
+    
     BTFSS   STATUS, 2		;Load turning speed
-    MOVLW   SPEED_RACE_TURN	
+    MOVLW   SPEED_RACE_TURN
     BTFSC   STATUS, 2		;Load straight speed
     MOVLW   SPEED_RACE_STRAIGHT
     
     CALL    PWM_SET
     
     RETURN
-
+    
 MOTOR_RESTART
     CALL    MOTOR_STOP
     CALL    MOTOR_START
