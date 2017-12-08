@@ -20,7 +20,7 @@ EE_READ_BYTE
 		
 		BSF	STATUS, RP0		; Select bank 1
 		MOVWF	EEADR			; Address to read
-		
+		ADDLW	EE_LOOK
 		BSF	EECON1, RD		; EEPROM read
 		MOVF	EEDAT, W		; Move EEDAT to W
 		
