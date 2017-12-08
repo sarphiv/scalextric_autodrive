@@ -24,7 +24,7 @@ MOTOR_UPDATE_RECON
     CALL    PWM_SET
     
     BCF	    STATUS, RP0		;Bank 0
-    BTFSC   PORTC, 2		;Check if turning
+    BTFSS   PORTC, 2		;Check if turning (INVERTED AS MAGNETS WERE INVERTED)
     GOTO    MOTOR_UPDATE_RECON_SET
     ;else
     CALL    EE_CLR		;Write 0 to EEProm

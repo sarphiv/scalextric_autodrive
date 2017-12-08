@@ -25,9 +25,9 @@ INCLUDE "p16f684.inc"
     ;LDR constants
     TOTALLAPS		EQU	3	;Total number of laps
     ;Motor constants
-    SPEED_RACE_TURN	EQU	d'90'	;Speed while turning in race mode
+    SPEED_RACE_TURN	EQU	d'80'	;Speed while turning in race mode
     SPEED_RACE_STRAIGHT	EQU	d'150'	;Speed driving straight in race mode
-    SPEED_RECON_NORMAL	EQU	d'70'	;Speed in recon mode
+    SPEED_RECON_NORMAL	EQU	d'90'	;Speed in recon mode
 
     
     cblock  0x20
@@ -92,8 +92,17 @@ INIT
     
 ; ******* MAIN LOOP *****************************************************	
 LOOP
-
-    NOP
+    BCF	    STATUS, RP0
+    
+;    BTFSS   PORTC, 2
+;    MOVLW   SPEED_RACE_TURN
+;    BTFSC   PORTC, 2
+;    MOVLW   SPEED_RACE_STRAIGHT
+;    
+;    BTFSS   RSTAT, RUN
+;    MOVLW   d'0'
+;    
+;    CALL    PWM_SET
 
     GOTO    LOOP
 
