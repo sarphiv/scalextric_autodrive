@@ -12,7 +12,13 @@ EE_INIT
 		MOVWF	EE_MASK 
 		BCF	STATUS, C
 		RETURN
-	
+		
+; Should be called after RECON finished
+EE_SET_LEN
+		MOVF	EE_ADR, W
+		MOWF	EE_LEN
+		RETURN
+
 EE_READ_BYTE
 ; Move data from EEPROM-memory to EE_BUFF
 		BCF 	STATUS, RP0		; Select bank 0
@@ -35,7 +41,7 @@ EE_WRITE_BYTE
 ; *** Writes data from W to EEPROM memory at adress EE_ADR ***
 ; Load data from W and EE_ADR
 		BSF	STATUS, RP0		; Select bank 1 
-		BCF	EECON1, RD
+		BCF	EECON1, RD		; Read disable
 		MOVWF	EEDAT			; Move W to EEDAT
 		
 		BCF	STATUS, RP0		; Select bank 0 
