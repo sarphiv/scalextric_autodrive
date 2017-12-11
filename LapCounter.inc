@@ -39,6 +39,7 @@ LAP_UPDATE_RECON
     
 LAP_UPDATE_SWITCH
     BCF	    RSTAT, MODE		;Set to race mode
+    CALL    EE_SET_LEN		;Save length of track
     
 LAP_UPDATE_RACE
     BCF	    STATUS, RP0		;Change to bank 0
