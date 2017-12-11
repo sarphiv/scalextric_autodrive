@@ -3,34 +3,58 @@ EE_INIT
 		BCF	STATUS, RP0
 		CLRF	EE_DATA
 		CLRF	EE_ADR
+		CLRF	EE_BUFF
+
+		CALL	EE_READ_BYTE
+		MOVF	EE_BUFF, W
+		MOVWF	EE_LEN
+				
 		CALL	EE_READ_BYTE
 		MOVWF	EE_BUFF
-		
-		CLRF	EE_ADR
 		
 		MOVLW	h'01'			; Initialize mask
 		MOVWF	EE_MASK 
 		BCF	STATUS, C
 		RETURN
-		
+
+EE_CLR_ADR
+		BSF	STATUS, RP0
+		MOVLW	d'1'
+		MOVWF	EE_ADR
+		GOTO EE_CLR_ADR_END
+
 ; Should be called after RECON finished
 EE_SET_LEN
+		BSF	STATUS, RP0
+		
 		MOVF	EE_ADR, W
 		MOVWF	EE_LEN
+		
+		MOVLW	d'0'
+		MOVWF	EE_ADR
+		
+		MOVF	EE_LEN, W
+		CALL	EE_WRITE_BYTE
+		
 		RETURN
 
 EE_READ_BYTE
 ; Move data from EEPROM-memory to EE_BUFF
 		BCF 	STATUS, RP0		; Select bank 0
 		MOVF	EE_ADR, W		; Move EE_ADR to W
+		ADDLW	EE_LOOK			; Move pointer forward
 		
 		SUBWF	EE_LEN			; EE_LEN minus EE_ADR
 		BTFSC	STATUS, Z		; Check zero flag
-		CLRF	EE_ADR			; If zero, clear EE_ADR
+		CALL	EE_CLR_ADR		; If zero, clear EE_ADR
 
+EE_CLR_ADR_END		
+		MOVF	EE_ADR, W
+		ADDLW	EE_LOOK			; Move pointer forward
+		
 		BSF	STATUS, RP0		; Select bank 1
 		MOVWF	EEADR			; Address to read
-		ADDLW	EE_LOOK
+		
 		BSF	EECON1, RD		; EEPROM read
 		MOVF	EEDAT, W		; Move EEDAT to W
 		
