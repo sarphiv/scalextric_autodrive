@@ -66,11 +66,14 @@ INIT
     MOVLW   b'00000100'	    ;Set C2 (turn switch) to input
     IORWF   TRISC, F			
     
-    ;
-    MOVLW   b'01111111'	    ;Change C3 (UNUSED) to digital
+    ;Brake light (C3)
+    MOVLW   b'01111111'	    ;Change C3 (Brake light) to digital
     ANDWF   ANSEL, F
-    MOVLW   b'11110111'	    ;Set C3 (UNUSED) to output
+    MOVLW   b'11110111'	    ;Set C3 (Brake light) to output
     ANDWF   TRISC, F
+    
+    ;Debug light (A5)
+    BCF	    TRISA, 5	    ;Set A5 (debug light) to digital output
     
     ;State switch (A3)
     MOVLW   b'00001000'	    ;Set A3 (State switch) to input
