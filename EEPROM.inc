@@ -10,7 +10,6 @@ EE_INIT
 		MOVWF	EE_LEN
 				
 		CALL	EE_READ_BYTE
-		MOVWF	EE_BUFF
 		
 		MOVLW	h'01'			; Initialize mask
 		MOVWF	EE_MASK 
@@ -25,7 +24,7 @@ EE_CLR_ADR
 
 ; Should be called after RECON finished
 EE_SET_LEN
-		BSF	STATUS, RP0
+		BCF	STATUS, RP0
 		
 		MOVF	EE_ADR, W
 		MOVWF	EE_LEN
