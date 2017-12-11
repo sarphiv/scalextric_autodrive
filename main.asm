@@ -27,7 +27,8 @@ INCLUDE "p16f684.inc"
     ;Motor constants
     SPEED_RACE_TURN	EQU	d'80'	;Speed while turning in race mode
     SPEED_RACE_STRAIGHT	EQU	d'150'	;Speed driving straight in race mode
-    SPEED_RECON_NORMAL	EQU	d'90'	;Speed in recon mode
+    SPEED_RECON_NORMAL	EQU	d'70'	;Speed in recon mode
+    EE_LOOK		EQU	d'3'	;Look-ahead distance in bytes
 
     
     cblock  0x20
@@ -38,6 +39,7 @@ INCLUDE "p16f684.inc"
     EE_ADR
     EE_MASK
     EE_BUFF
+    EE_LEN		    ;EOF for map in EEPROM
     LAP_Laps
     endc
 
