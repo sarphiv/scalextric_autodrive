@@ -43,7 +43,7 @@ EE_READ_BYTE
 		MOVF	EE_ADR, W		; Move EE_ADR to W
 		ADDLW	EE_LOOK			; Move pointer forward
 		
-		SUBWF	EE_LEN			; EE_LEN minus EE_ADR
+		SUBWF	EE_LEN, W		; EE_LEN minus EE_ADR
 		BTFSC	STATUS, Z		; Check zero flag
 		GOTO	EE_CLR_ADR		; If zero, clear EE_ADR
 
