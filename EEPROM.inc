@@ -20,7 +20,7 @@ EE_CLR_ADR
 		BSF	STATUS, RP0
 		MOVLW	d'1'
 		MOVWF	EE_ADR
-		GOTO EE_CLR_ADR_END
+		GOTO	EE_CLR_ADR_END
 
 ; Should be called after RECON finished
 EE_SET_LEN
@@ -45,7 +45,7 @@ EE_READ_BYTE
 		
 		SUBWF	EE_LEN			; EE_LEN minus EE_ADR
 		BTFSC	STATUS, Z		; Check zero flag
-		CALL	EE_CLR_ADR		; If zero, clear EE_ADR
+		GOTO	EE_CLR_ADR		; If zero, clear EE_ADR
 
 EE_CLR_ADR_END		
 		MOVF	EE_ADR, W
