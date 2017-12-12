@@ -5,19 +5,20 @@ EE_INIT
 		CLRF	EE_ADR
 		CLRF	EE_BUFF
 
-		CALL	EE_READ_BYTE
-		MOVF	EE_BUFF, W
+		CALL	EE_READ_BYTE		; Load EEPROM @ h'00'
+		MOVF	EE_BUFF, W		; into EE_LEN
 		MOVWF	EE_LEN
 				
-		CALL	EE_READ_BYTE
+		CALL	EE_READ_BYTE		; Load first map memory
+						; adress into read-buffer
 		
 		MOVLW	h'01'			; Initialize mask
 		MOVWF	EE_MASK 
-		BCF	STATUS, C
+
 		RETURN
 
 EE_CLR_ADR
-		BSF	STATUS, RP0
+		BCF	STATUS, RP0
 		MOVLW	d'1'
 		MOVWF	EE_ADR
 		GOTO	EE_CLR_ADR_END
