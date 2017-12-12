@@ -25,10 +25,10 @@ INCLUDE "p16f684.inc"
     ;LDR constants
     TOTALLAPS		EQU	3	;Total number of laps
     ;Motor constants
-    SPEED_RACE_TURN	EQU	d'80'	;Speed while turning in race mode
-    SPEED_RACE_STRAIGHT	EQU	d'150'	;Speed driving straight in race mode
+    SPEED_RACE_TURN	EQU	d'70'	;Speed while turning in race mode
+    SPEED_RACE_STRAIGHT	EQU	d'130'	;Speed driving straight in race mode
     SPEED_RECON_NORMAL	EQU	d'100'	;Speed in recon mode
-    EE_LOOK		EQU	d'3'	;Look-ahead distance in bytes
+    EE_LOOK		EQU	d'1'	;Look-ahead distance in bytes
 
     
     cblock  0x20
@@ -99,10 +99,10 @@ INIT
 LOOP
     BCF	    STATUS, RP0
     
-    BTFSS   PORTC, 2		;Turn on debug light
-    BSF	    PORTA, 5
-    BTFSC   PORTC, 2		;Turn off debug light
-    BCF	    PORTA, 5
+;    BTFSS   PORTC, 2		;Turn on debug light
+;    BSF	    PORTA, 5
+;    BTFSC   PORTC, 2		;Turn off debug light
+;    BCF	    PORTA, 5
     
 ;    BTFSS   PORTC, 2
 ;    MOVLW   SPEED_RACE_TURN

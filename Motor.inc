@@ -48,10 +48,10 @@ MOTOR_UPDATE_RACE
     BTFSC   STATUS, 2		;Turn off brake light
     BCF	    PORTC, 3
     
-;    BTFSS   STATUS, 2		;Turn on debug light
-;    BSF	    PORTA, 5
-;    BTFSC   STATUS, 2		;Turn off debug light
-;    BCF	    PORTA, 5
+    BTFSS   STATUS, 2		;Turn on debug light
+    BSF	    PORTA, 5
+    BTFSC   STATUS, 2		;Turn off debug light
+    BCF	    PORTA, 5
     
     BTFSS   STATUS, 2		;Load turning speed
     MOVLW   SPEED_RACE_TURN
