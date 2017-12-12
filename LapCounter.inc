@@ -32,7 +32,7 @@ LAP_UPDATE_RECON
     
     BTFSC   STATUS, 0		;If at first lap (right at the start)
     GOTO    MOTOR_RESTART	;Reset EEPROM and start motor
-;    BTFSS   STATUS, 0		;If recon lap finished
+				;If recon lap finished
     GOTO    LAP_UPDATE_SWITCH   ;Switch to race mode and start race round
     
     RETURN
@@ -49,7 +49,7 @@ LAP_UPDATE_RACE
     
     BTFSC   STATUS, 0		;If under or equal TOTALLAPS
     GOTO    MOTOR_RESTART	;STOP STOP, this line might be wrong
-;    BTFSS   STATUS, 0		;If over TOTALLAPS 
+				;If over TOTALLAPS 
     GOTO    MOTOR_STOP		;Stop motor and reset EEPROM
     
     RETURN			

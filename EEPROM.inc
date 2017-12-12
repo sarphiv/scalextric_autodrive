@@ -13,7 +13,7 @@ EE_INIT
 		
 		MOVLW	h'01'			; Initialize mask
 		MOVWF	EE_MASK 
-		BCF	STATUS, C
+;		BCF	STATUS, C
 		RETURN
 
 EE_CLR_ADR

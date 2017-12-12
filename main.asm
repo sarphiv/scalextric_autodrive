@@ -27,7 +27,7 @@ INCLUDE "p16f684.inc"
     ;Motor constants
     SPEED_RACE_TURN	EQU	d'80'	;Speed while turning in race mode
     SPEED_RACE_STRAIGHT	EQU	d'150'	;Speed driving straight in race mode
-    SPEED_RECON_NORMAL	EQU	d'70'	;Speed in recon mode
+    SPEED_RECON_NORMAL	EQU	d'100'	;Speed in recon mode
     EE_LOOK		EQU	d'3'	;Look-ahead distance in bytes
 
     
@@ -98,6 +98,11 @@ INIT
 ; ******* MAIN LOOP *****************************************************	
 LOOP
     BCF	    STATUS, RP0
+    
+    BTFSS   PORTC, 2		;Turn on debug light
+    BSF	    PORTA, 5
+    BTFSC   PORTC, 2		;Turn off debug light
+    BCF	    PORTA, 5
     
 ;    BTFSS   PORTC, 2
 ;    MOVLW   SPEED_RACE_TURN
