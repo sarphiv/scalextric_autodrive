@@ -27,8 +27,9 @@ LAP_UPDATE
 LAP_UPDATE_RECON
     BCF	    STATUS, RP0		;Change to bank 0   
     
+    BCF	    STATUS, 0		;Potentially remove this safety line
     MOVF    LAP_Laps, W		;Calculate if Laps <= 1 (one run on the track)
-    SUBLW   h'01'
+    SUBLW   h'02'		;
     
     BTFSC   STATUS, 0		;If at first lap (right at the start)
     GOTO    MOTOR_RESTART	;Reset EEPROM and start motor
@@ -39,13 +40,14 @@ LAP_UPDATE_RECON
     
 LAP_UPDATE_SWITCH
     BCF	    RSTAT, MODE		;Set to race mode
-    CALL    EE_SET_LEN		;Save length of track
+;    CALL    EE_SET_LEN		;Save length of track
     
 LAP_UPDATE_RACE
     BCF	    STATUS, RP0		;Change to bank 0
     
+    BCF	    STATUS, 0		;Potentially remove this safety line
     MOVF    LAP_Laps, W		;Calculate if Laps <= TotalLaps
-    SUBLW   TOTALLAPS		
+    SUBLW   TOTALLAPS		;
     
     BTFSC   STATUS, 0		;If under or equal TOTALLAPS
     GOTO    MOTOR_RESTART	;STOP STOP, this line might be wrong
