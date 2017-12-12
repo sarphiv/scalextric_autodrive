@@ -5,9 +5,9 @@ EE_INIT
 		CLRF	EE_ADR
 		CLRF	EE_BUFF
 
-		CALL	EE_READ_BYTE		; Load EEPROM @ h'00'
-		MOVF	EE_BUFF, W		; into EE_LEN
-		MOVWF	EE_LEN
+;		CALL	EE_READ_BYTE		; Load EEPROM @ h'00'
+;		MOVF	EE_BUFF, W		; into EE_LEN
+;		MOVWF	EE_LEN
 				
 		CALL	EE_READ_BYTE		; Load first map memory
 						; adress into read-buffer
@@ -42,13 +42,13 @@ EE_READ_BYTE
 		MOVF	EE_ADR, W		; Move EE_ADR to W
 		ADDLW	EE_LOOK			; Move pointer forward
 		
-		SUBWF	EE_LEN, W		; EE_LEN minus EE_ADR
-		BTFSC	STATUS, Z		; Check zero flag
-		GOTO	EE_CLR_ADR		; If zero, clear EE_ADR
+;		SUBWF	EE_LEN, W		; EE_LEN minus EE_ADR
+;		BTFSC	STATUS, Z		; Check zero flag
+;		GOTO	EE_CLR_ADR		; If zero, clear EE_ADR
 
 EE_CLR_ADR_END		
-		MOVF	EE_ADR, W
-		ADDLW	EE_LOOK			; Move pointer forward
+;		MOVF	EE_ADR, W
+;		ADDLW	EE_LOOK			; Move pointer forward
 		
 		BSF	STATUS, RP0		; Select bank 1
 		MOVWF	EEADR			; Address to read
