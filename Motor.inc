@@ -24,7 +24,7 @@ MOTOR_UPDATE_RECON
     CALL    PWM_SET
     
     BCF	    STATUS, RP0		;Bank 0
-    BTFSS   PORTC, 2		;Check if turning (INVERTED AS MAGNETS WERE INVERTED)
+    BTFSC   PORTC, 2		;Check if turning
     GOTO    MOTOR_UPDATE_RECON_SET
     ;else
     CALL    EE_CLR		;Write 0 to EEProm
@@ -37,7 +37,7 @@ MOTOR_UPDATE_RECON_SET		;This method prevents double writes
     RETURN
     
 MOTOR_UPDATE_RACE
-    CALL    EE_READ_BIT
+    CALL    EE_READ_BIT		;Load data bit
     
     BCF	    STATUS, RP0		;Bank 0
     

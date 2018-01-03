@@ -25,10 +25,10 @@ INCLUDE "p16f684.inc"
     ;LDR constants
     TOTALLAPS		EQU	3	;Total number of laps
     ;Motor constants
-    SPEED_RACE_TURN	EQU	d'70'	;Speed while turning in race mode
-    SPEED_RACE_STRAIGHT	EQU	d'130'	;Speed driving straight in race mode
-    SPEED_RECON_NORMAL	EQU	d'100'	;Speed in recon mode
-    EE_LOOK		EQU	d'1'	;Look-ahead distance in bytes
+    SPEED_RACE_TURN	EQU	d'90'	;Speed while turning in race mode
+    SPEED_RACE_STRAIGHT	EQU	d'150'	;Speed driving straight in race mode
+    SPEED_RECON_NORMAL	EQU	d'85'	;Speed in recon mode
+    EE_LOOK		EQU	d'3'	;Look-ahead distance in bytes
 
     
     cblock  0x20

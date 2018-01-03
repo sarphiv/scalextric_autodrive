@@ -31,16 +31,15 @@ LAP_UPDATE_RECON
     MOVF    LAP_Laps, W		;Calculate if Laps <= 1 (one run on the track)
     SUBLW   h'02'		;
     
-    BTFSC   STATUS, 0		;If at first lap (right at the start)
-    GOTO    MOTOR_RESTART	;Reset EEPROM and start motor
-				;If recon lap finished
+    BTFSC   STATUS, 0		;If under 2 laps (recon mode)
+    GOTO    MOTOR_START		;Make sure motor starts
+    
     GOTO    LAP_UPDATE_SWITCH   ;Switch to race mode and start race round
     
     RETURN
     
 LAP_UPDATE_SWITCH
     BCF	    RSTAT, MODE		;Set to race mode
-;    CALL    EE_SET_LEN		;Save length of track
     
 LAP_UPDATE_RACE
     BCF	    STATUS, RP0		;Change to bank 0

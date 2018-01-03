@@ -4,10 +4,6 @@ EE_INIT
 		CLRF	EE_DATA
 		CLRF	EE_ADR
 		CLRF	EE_BUFF
-
-;		CALL	EE_READ_BYTE		; Load EEPROM @ h'00'
-;		MOVF	EE_BUFF, W		; into EE_LEN
-;		MOVWF	EE_LEN
 				
 		CALL	EE_READ_BYTE		; Load first map memory
 						; adress into read-buffer
@@ -16,39 +12,11 @@ EE_INIT
 		MOVWF	EE_MASK 
 		RETURN
 
-EE_CLR_ADR
-		BCF	STATUS, RP0
-		MOVLW	d'1'
-		MOVWF	EE_ADR
-		GOTO	EE_CLR_ADR_END
-
-; Should be called after RECON finished
-EE_SET_LEN
-		BCF	STATUS, RP0
-		
-		MOVF	EE_ADR, W		; EE_ADR -> EE_LEN
-		MOVWF	EE_LEN
-		
-		CLRF	EE_ADR			; Clear EE_ADR 
-		
-		MOVF	EE_LEN, W		; EE_LEN -> EEPROM @ h'0'
-		CALL	EE_WRITE_BYTE
-		
-		RETURN
-
 EE_READ_BYTE
 ; Move data from EEPROM-memory to EE_BUFF
 		BCF 	STATUS, RP0		; Select bank 0
 		MOVF	EE_ADR, W		; Move EE_ADR to W
 		ADDLW	EE_LOOK			; Move pointer forward
-		
-;		SUBWF	EE_LEN, W		; EE_LEN minus EE_ADR
-;		BTFSC	STATUS, Z		; Check zero flag
-;		GOTO	EE_CLR_ADR		; If zero, clear EE_ADR
-
-EE_CLR_ADR_END		
-;		MOVF	EE_ADR, W
-;		ADDLW	EE_LOOK			; Move pointer forward
 		
 		BSF	STATUS, RP0		; Select bank 1
 		MOVWF	EEADR			; Address to read
@@ -77,7 +45,6 @@ EE_WRITE_BYTE
 		
 ; Writing procedure
 		BSF	EECON1, WREN		; Write enable
-		;BCF	INTCON, GIE		; Disable interupts
 
 ; Required sequence
 		MOVLW	h'55'			; Unlock write
@@ -90,8 +57,6 @@ EE_WRITE_BYTE
 EE_WAIT		BTFSC	EECON1, WR
 		GOTO	EE_WAIT
 		BCF	EECON1,WREN
-		
-		;BSF	INTCON, GIE		; Enable interupts
 		
 		BCF	STATUS, RP0
 		INCF	EE_ADR, F		; Increment pointer
