@@ -25,10 +25,12 @@ INCLUDE "p16f684.inc"
     ;LDR constants
     TOTALLAPS		EQU	3	;Total number of laps
     ;Motor constants
-    SPEED_RACE_TURN	EQU	d'60'	;Speed while turning in race mode
-    SPEED_RACE_STRAIGHT	EQU	d'170'	;Speed driving straight in race mode
+    SPEED_RACE_TURN	EQU	d'80'	;Speed while turning in race mode
+    SPEED_RACE_STRAIGHT	EQU	d'145'	;Speed driving straight in race mode
     SPEED_RECON_NORMAL	EQU	d'85'	;Speed in recon mode
-    EE_LOOK		EQU	d'2'	;Look-ahead distance in bytes
+    SPEED_RACE_ACCEL	EQU	d'190'	;Speed while accelerating in race mode
+    ACCEL_RACE_LENGTH	EQU	d'5'	;Cycles to accelerate in (8 is around 25 cm)
+    EE_LOOK		EQU	d'1'	;Look-ahead distance in bytes
 
     
     cblock  0x20
@@ -41,6 +43,7 @@ INCLUDE "p16f684.inc"
     EE_BUFF
     EE_LEN		    ;EOF for map in EEPROM
     LAP_Laps
+    MOTOR_ACCEL_COUNT	    ;Counter describing how long
     endc
 
 ; ******* MODULES *******************************************************

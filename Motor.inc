@@ -1,6 +1,9 @@
 ;Motor control routines
     
 MOTOR_INIT
+    BCF	    STATUS, RP0		;Bank 0
+    CLRF    MOTOR_ACCEL_COUNT	;Clear
+    
     CALL    PWM_INIT
     CALL    HallEffect_INIT
     
@@ -49,12 +52,32 @@ MOTOR_UPDATE_RACE
     BTFSC   STATUS, 2		;Turn off debug light
     BCF	    PORTA, 5
     
-    BTFSS   STATUS, 2		;Load turning speed
-    MOVLW   SPEED_RACE_TURN
-    BTFSC   STATUS, 2		;Load straight speed
-    MOVLW   SPEED_RACE_STRAIGHT
+    BTFSS   STATUS, 2
+    GOTO    MOTOR_UPDATE_RACE_TURN
+    ;else
     
-    CALL    PWM_SET
+    BCF	    STATUS, 0		;Potentially remove this safety line
+    MOVF    MOTOR_ACCEL_COUNT, W	
+    SUBLW   ACCEL_RACE_LENGTH
+    
+    BTFSC   STATUS, 0		;If in acceleration length
+    GOTO    MOTOR_UPDATE_RACE_ACCEL
+    ;else
+MOTOR_UPDATE_RACE_STRAIGHT
+    MOVLW   SPEED_RACE_STRAIGHT	;Load straight speed
+    GOTO    PWM_SET
+    
+MOTOR_UPDATE_RACE_ACCEL
+    INCF    MOTOR_ACCEL_COUNT, F
+    
+    MOVLW   SPEED_RACE_ACCEL
+    GOTO    PWM_SET
+    
+MOTOR_UPDATE_RACE_TURN
+    CLRF    MOTOR_ACCEL_COUNT	;Reset acceleration counter
+    
+    MOVLW   SPEED_RACE_TURN	;Load turning speed
+    GOTO    PWM_SET
     
     RETURN
     
