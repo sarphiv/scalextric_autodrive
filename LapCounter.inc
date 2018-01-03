@@ -28,12 +28,12 @@ LAP_UPDATE_RECON
     BCF	    STATUS, RP0		;Change to bank 0   
     
     BCF	    STATUS, 0		;Potentially remove this safety line
-    MOVF    LAP_Laps, W		;Calculate if Laps <= 1 (one run on the track)
+    MOVF    LAP_Laps, W		;Calculate if Laps < 3 (two runs on the track)
     SUBLW   h'02'		;
     
-    BTFSC   STATUS, 0		;If under 2 laps (recon mode)
+    BTFSC   STATUS, 0		;If under 3 laps (recon mode)
     GOTO    MOTOR_START		;Make sure motor starts
-    
+    ;else
     GOTO    LAP_UPDATE_SWITCH   ;Switch to race mode and start race round
     
     RETURN
@@ -50,7 +50,7 @@ LAP_UPDATE_RACE
     
     BTFSC   STATUS, 0		;If under or equal TOTALLAPS
     GOTO    MOTOR_RESTART	;STOP STOP, this line might be wrong
-				;If over TOTALLAPS 
+    ;else
     GOTO    MOTOR_STOP		;Stop motor and reset EEPROM
     
     RETURN			

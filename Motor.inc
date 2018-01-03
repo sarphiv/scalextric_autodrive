@@ -16,7 +16,6 @@ MOTOR_UPDATE
     ;else
     GOTO    MOTOR_UPDATE_RACE
     
-    
     RETURN			;This line should never be reached
     
 MOTOR_UPDATE_RECON
@@ -25,21 +24,18 @@ MOTOR_UPDATE_RECON
     
     BCF	    STATUS, RP0		;Bank 0
     BTFSC   PORTC, 2		;Check if turning
-    GOTO    MOTOR_UPDATE_RECON_SET
+    GOTO    EE_SET		;Write 1 to EEProm
     ;else
-    CALL    EE_CLR		;Write 0 to EEProm
+    GOTO    EE_CLR		;Write 0 to EEProm
     
-    RETURN
-    
-MOTOR_UPDATE_RECON_SET		;This method prevents double writes
-    CALL    EE_SET		;Write 1 to EEProm
-    
-    RETURN
+    RETURN			;This line should never be reached
     
 MOTOR_UPDATE_RACE
     CALL    EE_READ_BIT		;Load data bit
     
     BCF	    STATUS, RP0		;Bank 0
+    
+    BCF	    STATUS, 2		;Potentially remove this safety line
     
     ANDLW   h'01'		;Figure out if turning or not
     
@@ -72,7 +68,7 @@ MOTOR_START
     BCF	    STATUS, RP0		;Bank 0
     BSF	    RSTAT, RUN		;Set run state
     
-    CALL    MOTOR_UPDATE	
+    GOTO    MOTOR_UPDATE	
     
     RETURN
     
