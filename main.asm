@@ -25,8 +25,13 @@ INCLUDE "p16f684.inc"
     ;LDR constants
     TOTALLAPS		EQU	3	;Total number of laps
     ;Motor constants
+<<<<<<< HEAD
     SPEED_RACE_TURN	EQU	d'70'	;Speed while turning in race mode
     SPEED_RACE_STRAIGHT	EQU	d'127'	;Speed driving straight in race mode
+=======
+    SPEED_RACE_TURN	EQU	d'75'	;Speed while turning in race mode
+    SPEED_RACE_STRAIGHT	EQU	d'125'	;Speed driving straight in race mode
+>>>>>>> 2ff347a599d9087fe76798e4650190985565112d
     SPEED_RECON_NORMAL	EQU	d'85'	;Speed in recon mode
     SPEED_RACE_ACCEL	EQU	d'220'	;Speed while accelerating in race mode
     ACCEL_RACE_LENGTH	EQU	d'6'	;Cycles to accelerate in (8 is around 25 cm)
