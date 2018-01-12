@@ -26,7 +26,7 @@ MOTOR_UPDATE_RECON
     CALL    PWM_SET
     
     BCF	    STATUS, RP0		;Bank 0
-    BTFSC   PORTC, 2		;Check if turning
+    BTFSS   PORTC, 2		;Check if turning
     GOTO    EE_SET		;Write 1 to EEProm
     ;else
     GOTO    EE_CLR		;Write 0 to EEProm

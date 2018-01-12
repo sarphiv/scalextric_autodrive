@@ -8,6 +8,8 @@ EE_INIT
 		CALL	EE_READ_BYTE		; Load first map memory
 						; adress into read-buffer
 		
+		BCF	STATUS, RP0
+		CLRF	EE_ADR				
 		MOVLW	h'01'			; Initialize mask
 		MOVWF	EE_MASK 
 		RETURN

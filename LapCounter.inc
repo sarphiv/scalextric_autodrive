@@ -14,6 +14,9 @@ LAP_INIT
 LAP_UPDATE
     BCF	    STATUS, RP0		;Change to bank 0
     
+;    MOVLW   b'00100000'		;Toggle debug light on new lap
+;    XORWF   PORTA, F
+    
     INCF    LAP_Laps, F		;Increment laps by one
     
     BTFSS   RSTAT, MODE		;Figure out update type
